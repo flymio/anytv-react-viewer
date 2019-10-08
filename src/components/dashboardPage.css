@@ -1,0 +1,14 @@
+@media all and (min-width: 480px) {
+  .Dashboard {
+    padding: 60px 0;
+  }
+
+  .Dashboard h3, .Dashboard h1 {
+    text-align: center;
+  }
+
+  .Dashboard form {
+    margin: 0 auto;
+    max-width: 520px;
+  }
+}
