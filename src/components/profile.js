@@ -22,46 +22,74 @@ class Profile extends Component {
     };    
 
 
+    this.showRubrics = this.showRubrics.bind(this);
     this.showChannels = this.showChannels.bind(this);
   }
 
 
-  showChannels = function(data){
+
+  saveCurrentChannel = function(item){
+    localStorage.setItem('channel', JSON.stringify(item));
+  };
+
+  showRubrics = function(data){
     if (isEmpty(data)){
       return '';
     }
     data = data.slice(0,10);
     return data.map((item, key) =>
-      <div className="Channel">
-          <LinkButton             
-            to={linkToChannel(item)}            
-          >
-          <img src={item.icon} /><br/>
-          {item.name}
-          </LinkButton>
+      <div className="Rubrics">
+        <h1>{item.name}</h1>
+        <div className="Channels">
+          {this.showChannels(item.channels)}
         </div>
+      </div>
     );
   };
 
 
-  fetchChannels() {
+  showChannels = function(data){
     var that = this;
-    fetch('https://24h.tv/v2/channels?access_token=' + that.state.token).then(function (response) {
+    if (isEmpty(data)){
+        return ''
+    }
+    data = data.slice(0,10);
+    return data.map((item, key) =>
+      <div className="Channel">
+          <LinkButton
+            onClick={(event) => {
+              that.saveCurrentChannel(item)
+            }}
+            to={linkToChannel(item)}            
+          >
+          <div className="Channel_img"><img src={item.images[0].src||item.icon} /></div>
+          {item.name}
+          </LinkButton>
+        </div>
+    );    
+  }
+
+
+
+  fetchChannelsCategories() {
+    var that = this;
+    fetch('https://24h.tv/v2/channels/categories?access_token=' + that.state.token).then(function (response) {
       return response.json();
     }).then(function (result) {
       console.log(result);
       that.setState({ loading: false});
       that.setState({ data: result});
-      localStorage.setItem('channels', JSON.stringify(result));
+      localStorage.setItem('channels_categories', JSON.stringify(result));
     });
   }
 
   componentDidMount() {
     const storeUser = localStorage.getItem('user');
-    const chanelsList = localStorage.getItem('channels');
+    const chanelsList = localStorage.getItem('channels_categories');
     if (storeUser){
       let user = JSON.parse(storeUser);
       this.setState({ user: user });  
+
 
       if (chanelsList){
         let channels = JSON.parse(chanelsList);
@@ -69,8 +97,10 @@ class Profile extends Component {
         this.setState({ loading: false});
       }
       else{
-        this.fetchChannels();
+        this.fetchChannelsCategories();
       }
+
+
     }
   }
 
@@ -84,10 +114,14 @@ class Profile extends Component {
 
         <h1><img src={this.state.user.icon} /> Привет,  {this.state.user.name}</h1>
         
-        <LinkButton to='/dashboard'>Назад к выбору профилям</LinkButton>
+        <LinkButton to='/dashboard'>Телеканалы</LinkButton>
+        &nbsp;
+        <LinkButton to='/dashboard'>ТВ архив</LinkButton>
+        &nbsp;
+        <LinkButton to='/dashboard'>Кинотеатры</LinkButton>
         <br/><br/><br/>
         {this.state.loading ? 'А вот тут покажутся твои каналы каналы :-)' : ''}
-        {!this.state.loading ? this.showChannels(this.state.data) : ''}
+        {!this.state.loading ? this.showRubrics(this.state.data) : ''}
 
         <div style={style}>
           <ClipLoader
@@ -104,8 +138,8 @@ class Profile extends Component {
 }
 
 
-const linkToChannel = (props) =>{
-  return "/channel/" + props.id;
+const linkToChannel = (props) => {
+  return "/dashboard/channel/" + props.id + "/";
 }
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;

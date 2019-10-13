@@ -9,27 +9,64 @@
 
 .Channel {
   position: relative;
-  margin:10px;
+  margin: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   float: left;
   text-align: center;
+  max-height: 180px;
 }
 
-.Channel:first-child {
-  margin-left:0px;
-  padding-left:0px;
-}
-.Channel:last-child {
-  margin-right:0px;
-  padding-right:0px;
-}
 .Channel img {
-  width:100px;
-  height: 100px;
-  border-radius: 50%;
-  border-size:1px;
-  border:5px solid #fff;
+  margin: 0 auto;
+  max-width: 280px;
+  width: auto;
+  height: 157px;
+  border: 0;
 }
 
-.Channel.active img {
-  border:5px solid #EFC233;
+.Channel_img {
+  clear:both;
+}
+
+.Channels {
+  clear:both;
+}
+
+.Channels .Channel {
+  width:320px;
+  height:250px;
+}
+
+.Channels .Channel .btn:hover {
+  background: #17a2b8;
+}
+.Channels .Channel .btn {
+  background: #fff;
+  width: 320px;
+  height: 168px;
+}
+
+.Rubrics h1 {
+  display: block;
+  margin-left:10px;
+  clear:both;
+}
+
+.Profile {
+
+
+  
+}
+
+
+.currentVideo {
+  width: 400px;
+  margin:0 auto;
+  border:1px solid #dedede;
+  margin-bottom:20px;
+}
+
+.currentVideo img {
+  width:400px;
 }

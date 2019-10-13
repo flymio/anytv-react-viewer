@@ -16,7 +16,9 @@ import {
 import {withRouter} from 'react-router-dom';
 
 import Profiles from "../components/profiles";
+import Channel from "../components/channel";
 import { checkCookie } from '../utils/cookies';
+import LinkButton from './LinkButton';
 
 
 import "./dashboardPage.css";
@@ -29,9 +31,22 @@ class DashboardPage extends Component {
     this.state = {
       data: {},
       token: checkCookie(),
-    };    
+      schedule: [],
+      is_loading: true,
+    };
+    this.params = props.match.params;    
   }
 
+
+  fetchSchedule(channel_id){
+    var that = this;
+    fetch('https://24h.tv/v2/channels/'+channel_id+'/schedule?access_token=' + that.state.token).then(function (response) {
+      return response.json();
+    }).then(function (result) {
+      that.setState({ 'schedule': result});
+      localStorage.setItem('schedule_'+channel_id, JSON.stringify(result));
+    });
+  };
 
   fetchProfiles() {
     var that = this;
@@ -52,11 +67,32 @@ class DashboardPage extends Component {
     else{
       this.fetchProfiles();
     }
+    if (this.params.channel_id){
+      const scheduleList = localStorage.getItem('schedule'+this.params.channel_id);
+      if (scheduleList){
+        let schedule =  JSON.parse(scheduleList);
+        this.setState({ 'schedule': schedule});
+      }
+      else{
+        this.fetchSchedule(this.params.channel_id);
+      }
+    }
   };
 
 
 
   render() {
+
+    
+
+    if (this.params.channel_id){
+      return (
+        <div className="Dashboard">
+          <LinkButton to='/dashboard/channels/'>Телеканалы</LinkButton><Channel data={this.state.schedule} />
+        </div>
+      );
+    }
+
     return (
       <div className="Dashboard">
         <h1>Выбери профиль, юный падаван!</h1>

@@ -14,8 +14,7 @@
   padding-right:0px;
 }
 .profile img {
-  width:100px;
-  height: 100px;
+  width: 300px;
   border-radius: 50%;
   border-size:1px;
   border:5px solid #fff;
@@ -31,4 +30,8 @@
   text-align: center;  
   min-height: 300px;
   max-width: 500px;
+}
+
+.link-ajax {
+  border-bottom:1px dotted blue;
 }
