@@ -27,8 +27,25 @@ class Channel extends Component {
     this.params = props.match.params;
 
     this.showCover = this.showCover.bind(this);    
+    this.changeVideo = this.changeVideo.bind(this);    
   }
 
+
+  changeVideo = function(item, obj){
+    if (item.disabled){
+      return;
+    }
+    for(var i=0;i<this.state.schedule.length;i++){
+      if (this.state.schedule[i].timestamp == item.timestamp){
+        this.state.schedule[i].active=1;
+      }
+      if (this.state.schedule[i].timestamp != item.timestamp && this.state.schedule[i].active){
+        console.log(1444);
+        this.state.schedule[i].active=0;
+      }
+    }
+    this.fetchCurrentStream(this.params.channel_id, item.timestamp);
+  };
 
   showCover = function(){
     return <img src={this.state.video_cover} />;
@@ -40,35 +57,48 @@ class Channel extends Component {
         return '';
     }
     var hour = new Date().getHours();
+    var seconds = (new Date().getTime()+"").substr(0,10);
     var hour_begin = 0;
+    var seconds_begin = 0;
     for(var i=0; i< data.length; i++){
       var t = data[i].time.split(":")[0];
-      if (t >= hour && !hour_begin){
+      var s = data[i].timestamp;
+      if (seconds <= s + data[i].duration && seconds >= data[i].timestamp && !hour_begin){
         hour_begin = i;
+        seconds_begin = data[i].timestamp;
       }
     }
+    data.map(function(item,key){
+    });
     return data.map(function(item,key){
-      if (key >= hour_begin -3){
-        if (key == hour_begin){
+      if (key >= hour_begin - 10){
+        if (item.timestamp == seconds_begin){
           if (!that.state.video){
             that.setState({video: true});
             that.setState({video_cover: item.program.img[1].src || item.program.img[0].src});
+            item.active = 1;
+            that.state.schedule[key].active = 1;
           }
-          return <li class="list-group-item active"><small>{item.time}</small>, {item.program.title}</li>    
         }
         else{
-          return <li class="list-group-item"><JustLink to='/dashboard/channels/'><small>{item.time}</small>, {item.program.title}</JustLink></li>    
+          if (item.timestamp > seconds){
+            that.state.schedule[key].disabled = 1;
+          }              
         }
+        return <li  className={showClassnameItem(item)}><a className="link-ajax" onClick={(event) => {
+            that.changeVideo(item, event);
+          }}><small>{item.time}</small>, {item.program.title}</a></li>;
       }
       
     });    
   }
 
-
-
-  fetchCurrentStream(channel_id) {
+  fetchCurrentStream(channel_id, ts) {
     var that = this;
-    fetch('https://24h.tv/v2/channels/'+ channel_id +'/stream?access_token=' + that.state.token).then(function (response) {
+    if (!ts){
+      ts='';
+    }
+    fetch('https://24h.tv/v2/channels/'+ channel_id +'/stream?access_token=' + that.state.token+"&ts="+ts).then(function (response) {
       return response.json();
     }).then(function (result) {
       console.log(result);
@@ -104,7 +134,7 @@ class Channel extends Component {
       <div>
         <h1>{this.state.channelName}</h1>
         <div class="currentVideo">
-        {this.state.video ? this.showCover() : 'no video'}
+        {(!this.state.hasStream && this.state.video) ? this.showCover() : 'no video'}
         {this.state.hasStream ? <ReactHLS url={this.state.streamUrl} autoplay="true" /> : ''}
         </div>
         <ul class="list-group">
@@ -121,6 +151,18 @@ class Channel extends Component {
       </div>
     );
   }
+}
+
+
+const showClassnameItem = (props) =>{
+  let className = "list-group-item";
+  if (props.active){
+    className += " active";
+  }
+  if (props.disabled){
+    className += " disabled";
+  }
+  return className;
 }
 
 

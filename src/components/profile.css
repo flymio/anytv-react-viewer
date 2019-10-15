@@ -70,3 +70,12 @@
 .currentVideo img {
   width:400px;
 }
+
+
+.list-group-item .disabled {
+  color:#ddd;
+}
+
+.list-group-item .disabled a {
+  border-bottom:0px;
+}
