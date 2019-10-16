@@ -14,6 +14,7 @@ export default () =>
     <Route path='/login' component={LoginPage} />
     <Route path='/register' component={RegisterPage} />
     <PrivateRoute path="/profile/:id" exact component={Profile}  />
-    <PrivateRoute path="/dashboard/channel/:channel_id" exact component={DashboardPage}  />
-    <PrivateRoute path='/dashboard' component={DashboardPage} />
+    <PrivateRoute path='/dashboard/' exact={true} component={DashboardPage} />
+    <PrivateRoute path="/dashboard/:url" exact={true} component={DashboardPage}  />
+    <PrivateRoute path="/dashboard/:url/:url_id" exact={true} component={DashboardPage}  />
   </Switch>;

@@ -11,13 +11,17 @@ const LinkButton = (props) => {
     router,
     to,
     onClick,
+    className,
     ...rest
   } = props
 
-  console.log(props);
+  let _className = "btn btn-info ";
+  if (className){
+    _className += className;
+  }
 
   return (
-    <button class="btn btn-info"
+    <button className={_className}
       {...rest} // `children` is just another prop!
       onClick={(event) => {
         onClick && onClick(event)
