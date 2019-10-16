@@ -69,15 +69,34 @@ class Programs extends Component {
     this.setState({'filters': this.state.filters});
   }
 
+
+  showFilter(item){
+    let filters = item.filters;
+    filters.unshift({id:0, name:'Все'});
+
+
+    return <select className="category_filter" onChange={(event) => {        
+        console.log(this);
+      }}>{this.showFilterElements(filters)}</select>;
+  };
+
+  showFilterElements(filters){
+      return filters.map((item, key) =>      
+        <option value={item.id}>{item.name}</option>      
+      );
+  };
+
   showCategories(){
     let that = this;
     let data = this.state.filters;
 
     return data.map((item, key) =>      
-        <button className={this.showClassCategory(item)} onClick={(event) => {
+        <div className="col-sm"><button className={this.showClassCategory(item)} onClick={(event) => {
         that.selectCurrentCategory(item);
         console.log(event, item);
-      }}>{item.name}</button>
+      }}>{item.name}</button><br/>
+      {item.selected ? that.showFilter(item) : ''}
+      </div>
     );
 
     return <h1>hello, i'm categories</h1>;
@@ -121,7 +140,9 @@ class Programs extends Component {
       <div>
         <h1>programs</h1>
         <hr/>
+        <div class="row">
         {this.state.filters ? this.showCategories() : '<em>filters</em><br/>'}
+        </div>
         {this.state.programs ? this.showPrograms() : '<em>programs</em><br/>'}
 
         <div style={style}>
