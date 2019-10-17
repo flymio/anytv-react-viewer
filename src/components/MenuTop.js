@@ -17,6 +17,7 @@ class MenuTop extends Component {
         channels:'',
         programs:'',
         videos:'',
+        devices:'',
       }
     };
     this.params = props.match.params;    
@@ -60,7 +61,8 @@ class MenuTop extends Component {
           {this.state.profile ? <button class="btn btn-avatar"><img src={this.state.profile.icon} /><br/><span>{this.state.profile.name}</span></button> : '' }
           <LinkButton className={this.state.selected.channels} to='/dashboard/channels/'>Телеканалы</LinkButton> &nbsp;
           <LinkButton className={this.state.selected.programs} to='/dashboard/programs/'>ТВ архив</LinkButton> &nbsp;
-          <LinkButton className={this.state.selected.videos} to='/dashboard/videos/'>Кинотеатры</LinkButton>
+          <LinkButton className={this.state.selected.videos} to='/dashboard/videos/'>Кинотеатры</LinkButton> &nbsp;
+          <LinkButton className={this.state.selected.devices} to='/dashboard/devices/'>Мои устройства</LinkButton>
         </div>
       );
   }

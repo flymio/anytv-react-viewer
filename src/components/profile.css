@@ -14,11 +14,12 @@
   margin-bottom: 5px;
   float: left;
   text-align: center;
-  max-height: 180px;
+  max-height: 220px;
 }
 
 .Channel img {
   margin: 0 auto;
+  min-width: 280px;
   max-width: 280px;
   width: auto;
   height: 157px;
@@ -28,6 +29,9 @@
 .Channel_img {
   clear:both;
 }
+
+
+.Channel span {font-size:12px;}
 
 .Channels {
   clear:both;

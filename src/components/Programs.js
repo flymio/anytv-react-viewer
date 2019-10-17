@@ -6,6 +6,7 @@ import {withRouter} from 'react-router-dom';
 import JustLink from './JustLink';
 import "./profile.css";
 import ReactHLS from 'react-hls';
+import LinkButton from './LinkButton';
 
 class Programs extends Component {
 
@@ -18,30 +19,49 @@ class Programs extends Component {
       loading: true,
       filters: [],
       programs: [],
+      selected: {},
     };    
     this.params = props.match.params;
-
     this.showCategories = this.showCategories.bind(this);
     this.showPrograms = this.showPrograms.bind(this);
-
+    this.showVideos = this.showVideos.bind(this);
+    this.checkPrograms = this.checkPrograms.bind(this);
   }
 
 
-  checkPrograms(){
+  showVideos(){
+    this.checkPrograms(true);
+    this.setState({'loading': false});
+  };
+
+  checkPrograms(force){
     let that = this;
     const storePrograms = localStorage.getItem('programs');
-    if (storePrograms){
+    if (storePrograms && !force){
       let programs = JSON.parse(storePrograms);
       this.setState({ 'programs': programs});
       this.setState({ 'loading': false});
     }
     else{
-      fetch('https://24h.tv/v2/programs?access_token=' + that.state.token).then(function (response) {
+      let url = '';
+      if (force){
+        that.setState({'programs': ''});
+      }
+      console.log(that.state);
+      if (that.filter_id){
+        url+="&filters="+that.filter_id;
+      }
+      else if (that.program_id){
+        url+="&categories="+that.program_id; 
+      }
+      fetch('https://24h.tv/v2/programs?access_token=' + that.state.token+url).then(function (response) {
         return response.json();
       }).then(function (result) {
         that.setState({ 'programs': result});
         that.setState({ 'loading': false});
-        localStorage.setItem('programs', JSON.stringify(result));
+        if (!force){
+          localStorage.setItem('programs', JSON.stringify(result));          
+        }
       });
     }
   }
@@ -66,17 +86,21 @@ class Programs extends Component {
         this.state.filters[i].selected = true;
       }
     }
-    this.setState({'filters': this.state.filters});
+    this.setState({'filters': this.state.filters});    
   }
 
 
   showFilter(item){
+    var that = this;
     let filters = item.filters;
-    filters.unshift({id:0, name:'Все'});
-
-
-    return <select className="category_filter" onChange={(event) => {        
-        console.log(this);
+    if (filters[0].name != 'Все'){
+      filters.unshift({id:0, name:'Все'});      
+    }
+    return <select className="category_filter" value={this.state.selected[item.id]} onChange={(event) => {        
+        that.state.selected[item.id] = event.target.value;
+        that.filter_id = event.target.value;
+        that.showVideos();
+        return true;
       }}>{this.showFilterElements(filters)}</select>;
   };
 
@@ -92,8 +116,13 @@ class Programs extends Component {
 
     return data.map((item, key) =>      
         <div className="col-sm"><button className={this.showClassCategory(item)} onClick={(event) => {
+        that.setState({'program_id': item.id});
+        that.setState({'loading': true});
+        that.program_id = item.id;
+        that.filter_id = '';
+        that.state.selected[item.id]='';
         that.selectCurrentCategory(item);
-        console.log(event, item);
+        that.showVideos();
       }}>{item.name}</button><br/>
       {item.selected ? that.showFilter(item) : ''}
       </div>
@@ -103,10 +132,21 @@ class Programs extends Component {
   }
 
   showPrograms(){
-    if (!this.state.filter_id){
+    var that = this;
+    if (!that.state.programs){
       return '';
     }
-    return <h1>hello, i'm programs</h1>;
+    let data = that.state.programs.slice(0,9);
+    return data.map((item, key) =>
+      <div className="Channel">
+          <LinkButton
+            to={linkToChannel(item)}            
+          >
+          <div className="Channel_img"><img src={item.cover||item.icon} /></div>
+          <span>{item.title}</span>
+          </LinkButton>
+        </div>
+    );    
   }
 
 
@@ -143,8 +183,8 @@ class Programs extends Component {
         <div class="row">
         {this.state.filters ? this.showCategories() : '<em>filters</em><br/>'}
         </div>
-        {this.state.programs ? this.showPrograms() : '<em>programs</em><br/>'}
-
+        <br/>
+        {this.state.programs ? this.showPrograms() : ''}
         <div style={style}>
           <ClipLoader
             sizeUnit={"px"}
@@ -156,6 +196,11 @@ class Programs extends Component {
       </div>
     );
   }
+}
+
+
+const linkToChannel = (props) => {
+  return "/dashboard/programs/" + props.id + "/";
 }
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
