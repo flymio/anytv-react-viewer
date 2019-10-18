@@ -37,6 +37,20 @@
   clear:both;
 }
 
+.ProgramDescription, .ProgramGenres {
+  clear: both;
+}
+
+.ProgramGenres .badge-padding {
+  margin-right: 10px;
+}
+
+.ProgramSlider {
+  margin-top:20px;
+}
+.ProgramSlider img {
+  max-width:100%;
+}
 .Channels .Channel {
   width:320px;
   height:250px;
@@ -55,6 +69,11 @@
   display: block;
   margin-left:10px;
   clear:both;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  clear: both;
+  display: block;
 }
 
 .Profile {
@@ -82,4 +101,19 @@
 
 .list-group-item .disabled a {
   border-bottom:0px;
+}
+
+
+.EpisodeDescription {
+  font-size:10px;
+}
+
+.float-right {
+  float:right;
+}
+
+
+.ajax-link {
+  cursor: pointer;
+  color:#fff !imporant;
 }

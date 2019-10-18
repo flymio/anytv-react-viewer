@@ -11,11 +11,17 @@ const JustLink = (props) => {
     router,
     to,
     onClick,
+    replaceClass,
     ...rest
   } = props
 
+  let className = "link-ajax";
+  if (replaceClass){
+    className = replaceClass;
+  }
+
   return (
-    <a className="link-ajax"
+    <a className={className}
       {...rest} // `children` is just another prop!
       onClick={(event) => {
         onClick && onClick(event)

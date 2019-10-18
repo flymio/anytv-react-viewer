@@ -17,4 +17,5 @@ export default () =>
     <PrivateRoute path='/dashboard/' exact={true} component={DashboardPage} />
     <PrivateRoute path="/dashboard/:url" exact={true} component={DashboardPage}  />
     <PrivateRoute path="/dashboard/:url/:url_id" exact={true} component={DashboardPage}  />
+    <PrivateRoute path="/dashboard/:url/:url_id/:url_id2" exact={true} component={DashboardPage}  />
   </Switch>;

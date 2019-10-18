@@ -18,10 +18,11 @@ class Programs extends Component {
       token: checkCookie(),
       loading: true,
       filters: [],
+      program_id: '',
       programs: [],
       selected: {},
       page: 0,
-      limit: 12,
+      limit: 13,
     };    
     this.params = props.match.params;
     this.showCategories = this.showCategories.bind(this);
@@ -29,7 +30,11 @@ class Programs extends Component {
     this.showVideos = this.showVideos.bind(this);
     this.checkPrograms = this.checkPrograms.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
-
+    this.loadProgram = this.loadProgram.bind(this);
+    this.showProgram = this.showProgram.bind(this);
+    this.showGenres = this.showGenres.bind(this);
+    this.showSchedule = this.showSchedule.bind(this);
+    this.showLinkToChannel = this.showLinkToChannel.bind(this);
   }
 
 
@@ -38,10 +43,64 @@ class Programs extends Component {
     this.setState({'loading': false});
   };
 
+
+  loadProgram(program_id){
+    let that = this;
+      fetch('https://24h.tv/v2/programs/'+program_id+'/schedule?access_token=' + that.state.token).then(function (response) {
+        return response.json();
+      }).then(function (result) {
+        that.setState({ 'program': result});
+        that.setState({ 'loading': false});
+      });
+  };
+
+  showGenres(program){
+      return program.genres.map((item, key) =>      
+        <div className="badge badge-success badge-padding">{item.name}</div>
+      );
+  };
+
+  showLinkToChannel(item){
+    return "/dashboard/channels/"+item.channel_id+"/"+item.timestamp;
+  };
+
+  showSchedule(schedule){
+    console.log(schedule);
+      return schedule.map((item, key) =>      
+        <li className="list-group-item">
+          <span>{item.channel.name}, {item.date} {item.time} {item.episode ? <strong>{item.episode.title}</strong> : ''}
+          {item.episode && item.episode.season ? <em>, сезон {item.episode.season}</em> : ''}
+          {item.episode && item.episode.series ? <em>, серия {item.episode.series}</em> : ''}
+          </span>
+          &nbsp;<JustLink replaceClass="badge badge-success ajax-link float-right" to={this.showLinkToChannel(item)}>перейти к просмотру</JustLink>
+        </li>
+      );
+
+  };
+
+  showProgram(){
+    let that = this;
+    let item = this.state.program[0].program;
+    let schedule = this.state.program;
+    return <div className="Program">
+          <h3>{item.title}</h3>
+          <div className="ProgramDescription">{item.description}</div>
+          <div className="ProgramGenres">{that.showGenres(item)}<br/><br/></div>
+          {item.img[0] ? <div className="ProgramSlider"><img src={item.img[0].src} /></div> : ''}
+          <br/>
+          <h4>Расписание</h4>
+          <br/>
+          <ul class="list-group">
+          {that.showSchedule(schedule)}
+          </ul>
+      </div>;
+
+  }
+
   checkPrograms(force){
     let that = this;
     const storePrograms = localStorage.getItem('programs');
-    if (storePrograms && !force && !that.state.page){
+    if (storePrograms && !force && !that.state.page && 2 > 1){
       let programs = JSON.parse(storePrograms);
       this.setState({ 'programs': programs});
       this.setState({ 'loading': false});
@@ -166,11 +225,12 @@ class Programs extends Component {
 
 
   handleScroll(event) {
-    if (this.state.loading){
+    let lazyTop = document.getElementById("lazyloading");
+    if (this.state.loading || this.state.program || !lazyTop){
       return true;
     }
-    let scrollTop = event.target.scrollingElement.scrollTop + window.innerHeight, lazyTop = document.getElementById("lazyloading").offsetTop;
-    console.log(scrollTop, lazyTop);
+    lazyTop = lazyTop.offsetTop;
+    let scrollTop = event.target.scrollingElement.scrollTop + window.innerHeight;
     if (scrollTop > lazyTop && !this.state.loading){
         this.state.page++; 
         this.setState({ 'loading': true});
@@ -188,17 +248,18 @@ class Programs extends Component {
 
 
   componentWillMount() {
-    const storeFilters = localStorage.getItem('programs_filters');
-    if (storeFilters){
-      let filters = JSON.parse(storeFilters);
-      this.setState({ 'filters': filters});
-      this.checkPrograms();
+    const params = this.props.match.params;
+    if (params && !params.url_id){
+      const storeFilters = localStorage.getItem('programs_filters');
+      if (storeFilters){
+        let filters = JSON.parse(storeFilters);
+        this.setState({ 'filters': filters});
+        this.checkPrograms();
+      }
+      else{
+        this.fetchFilters();
+      }
     }
-    else{
-      this.fetchFilters();
-    }
-    
-
   };
 
   showClassCategory = function(item){
@@ -217,6 +278,26 @@ class Programs extends Component {
     const style = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
     const stylePaging = { marginLeft: '420px' };
 
+    const params = that.props.match.params;
+
+    if (params && params.url_id){
+      that.loadProgram(params.url_id);
+      return (
+        <div>
+          <br/>
+          {that.state.program ? that.showProgram() : ''}
+          <div style={style}>
+            <ClipLoader
+              sizeUnit={"px"}
+              size={50}
+              color={'#17a2b8'}
+              loading={this.state.loading}
+            />
+            </div>
+        </div>
+      );
+
+    }
 
     return (
       <div>
