@@ -20,12 +20,16 @@ class Programs extends Component {
       filters: [],
       programs: [],
       selected: {},
+      page: 0,
+      limit: 12,
     };    
     this.params = props.match.params;
     this.showCategories = this.showCategories.bind(this);
     this.showPrograms = this.showPrograms.bind(this);
     this.showVideos = this.showVideos.bind(this);
     this.checkPrograms = this.checkPrograms.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
+
   }
 
 
@@ -37,13 +41,13 @@ class Programs extends Component {
   checkPrograms(force){
     let that = this;
     const storePrograms = localStorage.getItem('programs');
-    if (storePrograms && !force){
+    if (storePrograms && !force && !that.state.page){
       let programs = JSON.parse(storePrograms);
       this.setState({ 'programs': programs});
       this.setState({ 'loading': false});
     }
     else{
-      let url = '';
+      let url = '&limit='+that.state.limit;
       if (force){
         that.setState({'programs': ''});
       }
@@ -54,12 +58,20 @@ class Programs extends Component {
       else if (that.program_id){
         url+="&categories="+that.program_id; 
       }
+      if (that.state.page>0){
+        let offset = parseInt(this.state.page * that.state.limit);
+        url+="&offset="+offset;
+      }
       fetch('https://24h.tv/v2/programs?access_token=' + that.state.token+url).then(function (response) {
         return response.json();
       }).then(function (result) {
+        if (that.state.page > 0 ){
+          result = that.state.programs.concat(result);          
+          console.log(result);
+        }
         that.setState({ 'programs': result});
         that.setState({ 'loading': false});
-        if (!force){
+        if (!force && !that.state.page){
           localStorage.setItem('programs', JSON.stringify(result));          
         }
       });
@@ -98,6 +110,7 @@ class Programs extends Component {
     }
     return <select className="category_filter" value={this.state.selected[item.id]} onChange={(event) => {        
         that.state.selected[item.id] = event.target.value;
+        this.state.page = 0;
         that.filter_id = event.target.value;
         that.showVideos();
         return true;
@@ -117,6 +130,7 @@ class Programs extends Component {
     return data.map((item, key) =>      
         <div className="col-sm"><button className={this.showClassCategory(item)} onClick={(event) => {
         that.setState({'program_id': item.id});
+        this.state.page = 0;
         that.setState({'loading': true});
         that.program_id = item.id;
         that.filter_id = '';
@@ -136,7 +150,7 @@ class Programs extends Component {
     if (!that.state.programs){
       return '';
     }
-    let data = that.state.programs.slice(0,9);
+    let data = that.state.programs;
     return data.map((item, key) =>
       <div className="Channel">
           <LinkButton
@@ -148,6 +162,29 @@ class Programs extends Component {
         </div>
     );    
   }
+
+
+
+  handleScroll(event) {
+    if (this.state.loading){
+      return true;
+    }
+    let scrollTop = event.target.scrollingElement.scrollTop + window.innerHeight, lazyTop = document.getElementById("lazyloading").offsetTop;
+    console.log(scrollTop, lazyTop);
+    if (scrollTop > lazyTop && !this.state.loading){
+        this.state.page++; 
+        this.setState({ 'loading': true});
+        this.checkPrograms();
+    }
+  };
+
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+  };
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  };
 
 
   componentWillMount() {
@@ -174,7 +211,12 @@ class Programs extends Component {
 
 
   render() {
+
+    let that = this;
+
     const style = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+    const stylePaging = { marginLeft: '420px' };
+
 
     return (
       <div>
@@ -185,6 +227,12 @@ class Programs extends Component {
         </div>
         <br/>
         {this.state.programs ? this.showPrograms() : ''}
+        {!this.state.loading ? <div style={stylePaging}><br clear="both" /><button id="lazyloading" className="btn btn-success" onClick={(event) => {
+        //this.setState({'loading': true});
+        that.state.page++; 
+        that.checkPrograms();
+        return false;   
+      }}>Page {that.state.page+2}</button></div> : ''}
         <div style={style}>
           <ClipLoader
             sizeUnit={"px"}

@@ -30,6 +30,7 @@ class RemoveOneDevice extends Component {
     ).then(function (response) {
       return response.json();
     }).then(function (result) {
+      console.log(result);
       that.setState({loading: false});
       that.setState({data: result});
     });    
@@ -60,7 +61,7 @@ class RemoveOneDevice extends Component {
     }
     console.log(this.state.data);
     return this.state.data.map(function(item,key){
-        return <li  className="list-group-item"><small>{showDate(item.created_at)}</small>, {item.vendor} — {item.model}, {showDate(item.loggin_at)} <div class="badge badge-info">{item.device_type}</div> <a href="javascript:void(0)" className="badge badge-danger" onClick={(event) => {
+        return <li  className="list-group-item"><small>{showDate(item.created_at)}</small>, {item.vendor} — {item.model}, {item.os_name} {showDate(item.login_at)} <div class="badge badge-info">{item.device_type}</div> <a href="javascript:void(0)" className="badge badge-danger" onClick={(event) => {
             that.removeDevice(item);
           }}>удалить</a></li>;
     });    
@@ -99,7 +100,7 @@ class RemoveOneDevice extends Component {
 
 const showDate = (date) =>{
   if (!date){
-    return " — ";
+    return "";
   }
   return date.split("T")[0];
 }
