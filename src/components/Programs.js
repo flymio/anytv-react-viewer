@@ -22,7 +22,7 @@ class Programs extends Component {
       programs: [],
       selected: {},
       page: 0,
-      limit: 13,
+      limit: 24,
     };    
     this.params = props.match.params;
     this.showCategories = this.showCategories.bind(this);
@@ -99,42 +99,33 @@ class Programs extends Component {
 
   checkPrograms(force){
     let that = this;
-    const storePrograms = localStorage.getItem('programs');
-    if (storePrograms && !force && !that.state.page && 2 > 1){
-      let programs = JSON.parse(storePrograms);
-      this.setState({ 'programs': programs});
-      this.setState({ 'loading': false});
+    let url = '&limit='+that.state.limit;
+    if (force){
+      that.setState({'programs': ''});
     }
-    else{
-      let url = '&limit='+that.state.limit;
-      if (force){
-        that.setState({'programs': ''});
-      }
-      console.log(that.state);
-      if (that.filter_id){
-        url+="&filters="+that.filter_id;
-      }
-      else if (that.program_id){
-        url+="&categories="+that.program_id; 
-      }
-      if (that.state.page>0){
-        let offset = parseInt(this.state.page * that.state.limit);
-        url+="&offset="+offset;
-      }
-      fetch('https://24h.tv/v2/programs?access_token=' + that.state.token+url).then(function (response) {
-        return response.json();
-      }).then(function (result) {
-        if (that.state.page > 0 ){
-          result = that.state.programs.concat(result);          
-          console.log(result);
-        }
-        that.setState({ 'programs': result});
-        that.setState({ 'loading': false});
-        if (!force && !that.state.page){
-          localStorage.setItem('programs', JSON.stringify(result));          
-        }
-      });
+    console.log(that.state);
+    if (that.filter_id){
+      url+="&filters="+that.filter_id;
     }
+    else if (that.program_id){
+      url+="&categories="+that.program_id; 
+    }
+    if (that.state.page>0){
+      let offset = parseInt(this.state.page * that.state.limit);
+      url+="&offset="+offset;
+    }
+    fetch('https://24h.tv/v2/programs?access_token=' + that.state.token+url).then(function (response) {
+      return response.json();
+    }).then(function (result) {
+      if (that.state.page > 0 ){
+        result = that.state.programs.concat(result);          
+      }
+      that.setState({ 'programs': result});
+      that.setState({ 'loading': false});
+      if (!force && !that.state.page){
+        localStorage.setItem('programs', JSON.stringify(result));          
+      }
+    });
   }
 
   fetchFilters(){
@@ -188,9 +179,9 @@ class Programs extends Component {
 
     return data.map((item, key) =>      
         <div className="col-sm"><button className={this.showClassCategory(item)} onClick={(event) => {
+        that.setState({'loading': true});
         that.setState({'program_id': item.id});
         this.state.page = 0;
-        that.setState({'loading': true});
         that.program_id = item.id;
         that.filter_id = '';
         that.state.selected[item.id]='';
@@ -313,7 +304,7 @@ class Programs extends Component {
         that.state.page++; 
         that.checkPrograms();
         return false;   
-      }}>Page {that.state.page+2}</button></div> : ''}
+      }}>Loading</button></div> : ''}
         <div style={style}>
           <ClipLoader
             sizeUnit={"px"}

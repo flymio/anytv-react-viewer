@@ -117,3 +117,17 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   color:#fff !imporant;
 }
+
+
+
+.ChannelSelector {
+  padding:5px;
+  background: #17a2b8;
+  border-radius: 5px;
+  color:#fff;
+}
+
+.ChannelSelector.active {
+  background: #28a745;
+  color:#fff;
+}

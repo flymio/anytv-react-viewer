@@ -121,9 +121,6 @@ class Channel extends Component {
       this.setState({channelName: channel.name});
       this.fetchCurrentStream(this.params.channel_id);
     }
-
-
-
   }
 
   render() {

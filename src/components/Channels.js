@@ -7,6 +7,7 @@ import JustLink from './JustLink';
 import "./profile.css";
 
 import ReactHLS from 'react-hls';
+import LinkButton from './LinkButton';
 
 
 class Channels extends Component {
@@ -22,19 +23,269 @@ class Channels extends Component {
       schedule: [],
       channel: {},
       channelName: '',
+      page: 0,
+      channels_categories: [],
       video: false,
     };    
+    this.fetchCategories = this.fetchCategories.bind(this);
+    this.showChannels = this.showChannels.bind(this);
+    this.showCategoriesList = this.showCategoriesList.bind(this);
+    this.showCategories = this.showCategories.bind(this);
+    this.showChannel = this.showChannel.bind(this);
+    this.loadChannel = this.loadChannel.bind(this);
+
+
     this.params = props.match.params;
   }
 
+
+  loadChannel(channel_id, timestamp){
+    let that = this;
+    if (!isEmpty(this.state.schedule)){
+      return;
+    }
+
+    fetch('https://24h.tv/v2/channels/'+channel_id+'/schedule?access_token=' + that.state.token).then(function (response) {
+      return response.json();
+    }).then(function (result) {
+      that.setState({'schedule': result});
+
+      let channelsList = localStorage.getItem('channels');
+      if (channelsList){
+        let channels = JSON.parse(channelsList);
+        for(let i=0; i< channels.length; i++){
+          if (channels[i].id == channel_id){
+            that.setState({'channel': channels[i] });
+            that.setState({'channelName': channels[i].name });
+          }
+        }
+      }
+      that.setState({'loading': false });
+      that.fetchCurrentStream(channel_id, timestamp);
+    });
+
+  }
+
+
+  showCover = function(){
+    return <img src={this.state.video_cover} />;
+  };
+
+  showSchedule = function(data){
+    let that = this;
+    if (isEmpty(data)){
+        return '';
+    }
+    const params = that.props.match.params;
+    var timestamp = params.url_id2 || 0;
+    var hour = new Date().getHours();
+    var seconds = (new Date().getTime()+"").substr(0,10);
+    var hour_begin = 0;
+    var seconds_begin = 0;
+    for(var i=0; i< data.length; i++){
+      var t = data[i].time.split(":")[0];
+      var s = data[i].timestamp;
+      if ((seconds <= s + data[i].duration && seconds >= data[i].timestamp && !hour_begin) || (timestamp && timestamp == data[i].timestamp)){
+        hour_begin = i;
+        seconds_begin = data[i].timestamp;
+      }
+    }
+    data.map(function(item,key){
+    });
+    return data.map(function(item,key){
+      if (key >= hour_begin - 10){
+        if (item.timestamp == seconds_begin){
+          if (!that.state.video){
+            that.setState({video: true});
+            that.setState({video_cover: item.program.img[1].src || item.program.img[0].src});
+            item.active = 1;
+            that.state.schedule[key].active = 1;
+          }
+        }
+        else{
+          if (item.timestamp > seconds){
+            that.state.schedule[key].disabled = 1;
+          }              
+        }
+        return <li  className={showClassnameItem(item)}><a className="link-ajax" onClick={(event) => {
+            that.changeVideo(item, event);
+          }}><small>{item.time}</small>, {item.program.title}</a></li>;
+      }
+      
+    });    
+  }
+
+  changeVideo = function(item, obj){
+    if (item.disabled){
+      return;
+    }
+    for(var i=0;i<this.state.schedule.length;i++){
+      if (this.state.schedule[i].timestamp == item.timestamp){
+        this.state.schedule[i].active=1;
+      }
+      if (this.state.schedule[i].timestamp != item.timestamp && this.state.schedule[i].active){
+        console.log(1444);
+        this.state.schedule[i].active=0;
+      }
+    }
+    this.fetchCurrentStream(this.params.channel_id, item.timestamp);
+  };
+
+
+  fetchCurrentStream(channel_id, ts) {
+    var that = this;
+    if (!ts){
+      ts='';
+    }
+    fetch('https://24h.tv/v2/channels/'+ channel_id +'/stream?access_token=' + that.state.token+"&ts="+ts).then(function (response) {
+      return response.json();
+    }).then(function (result) {
+      console.log(result);
+      that.setState({ hasStream: true});
+      that.setState({ streamUrl: result.hls});      
+    });
+  }  
+
+
+  showChannel(){
+    return (
+      <div>
+        <h1>{this.state.channelName}</h1>
+        <div class="currentVideo">
+        {(!this.state.hasStream) ? this.showCover() : ''}
+        {this.state.hasStream ? <ReactHLS url={this.state.streamUrl} autoplay="true" /> : ''}
+        </div>
+        <ul class="list-group">
+        {this.showSchedule(this.state.schedule)}
+        </ul>
+      </div>
+    );
+  }
+
+  fetchCategories(){
+    var that = this;
+    fetch('https://24h.tv/v2/channels/categories?access_token=' + that.state.token).then(function (response) {
+      return response.json();
+    }).then(function (result) {
+
+      let channels = [];
+      for(let i=0; i < result.length; i++){
+        for(let j=0; j < result[i].channels.length; j++){
+          let subitem = result[i].channels[j];
+          subitem.category_id = result[i].id;
+          channels.push(subitem);
+        }
+      }    
+
+      that.setState({'channels': channels});
+      localStorage.setItem('channels', JSON.stringify(channels));
+      that.setState({'channels_categories': result});
+      that.setState({'loading': false });
+    });
+  };
+
+  componentWillMount() {
+    this.fetchCategories();
+  }
+
+
+  showCategoriesList(){
+    let data = this.state.channels_categories;
+    if (!data){
+      return '';
+    }
+    return data.map((item, key) =>
+      <div className="Channel">
+        <button className="btn ChannelSelector">{item.name}</button>
+      </div>);
+
+  };
+
+  showChannels(){
+    let that = this;
+    let data = this.state.channels;
+    if (!data){
+      return '';
+    }
+    return data.map((item, key) =>
+      <div className="Channel">
+          <LinkButton
+            onClick={(event) => {
+              that.setState({schedule: false});
+            }}
+            to={linkToChannel(item)}            
+          >
+          <div className="Channel_img"><img src={item.cover.light_bg||item.icon} /></div>
+          <span>{item.name}</span>
+          </LinkButton>
+      </div>
+    );
+  };
+
+
+  showCategories(){
+
+    var that = this;
+    if (!that.state.channels_categories){
+      return '';
+    }
+    return <div className="ChannelContainer">
+      <div className="ChannelFilters">
+        {this.state.channels ? <div className="Channel"><button className="btn ChannelSelector active">Все</button></div> : ''}
+        {this.showCategoriesList()}
+      </div>
+      <br clear="both" />
+      <div class="ChannelContent">
+        {this.showChannels()}
+      </div>
+    </div>
+    let data = that.state.channels_categories;
+    return data.map((item, key) =>
+      <div className="Channel">
+          <h4>{item.name}</h4><br/>
+      </div>
+    );    
+
+    return 'loaded';
+  }
+
   render() {
+    let that = this;
+
     const style = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
+    const params = that.props.match.params;
+
+    if (params && params.url_id){
+      that.loadChannel(params.url_id, params.url_id2 || 0);
+      return (
+        <div>
+          <br/>
+          {that.state.channel ? that.showChannel() : ''}
+          <div style={style}>
+            <ClipLoader
+              sizeUnit={"px"}
+              size={50}
+              color={'#17a2b8'}
+              loading={this.state.loading}
+            />
+            </div>
+        </div>
+      );
+
+    }
 
     return (
       <div>
         <h1>channels</h1>
-        <em>filters</em><br/>
-        <em>categories</em><br/>
+        {this.state.channels_categories ? this.showCategories() : ''}
+        <div style={style}>
+          <ClipLoader
+            sizeUnit={"px"}
+            size={50}
+            color={'#17a2b8'}
+            loading={this.state.loading}
+          />
+          </div>
       </div>
     );
   }
@@ -51,6 +302,21 @@ function isEmpty(obj) {
         if (hasOwnProperty.call(obj, key)) return false;
     }
     return true;
+}
+
+const linkToChannel = (props) => {
+  return "/dashboard/channels/" + props.id + "/";
+}
+
+const showClassnameItem = (props) =>{
+  let className = "list-group-item";
+  if (props.active){
+    className += " active";
+  }
+  if (props.disabled){
+    className += " disabled";
+  }
+  return className;
 }
 
 export default withRouter(Channels);
