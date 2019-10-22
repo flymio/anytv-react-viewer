@@ -32,6 +32,9 @@ class Videos extends Component {
       video: false,
       limit: 12,
     };    
+    this.video_id = 0;
+    this.episode_id = 0;
+
     this.showClassNameEpisode = this.showClassNameEpisode.bind(this);
     this.showCategories = this.showCategories.bind(this);
     this.checkVideos = this.checkVideos.bind(this);
@@ -191,7 +194,10 @@ class Videos extends Component {
     return data.map((item, key) =>
       <div className="Channel ChannelVideo">
           <LinkButton
-            to={linkToVideo(item)}            
+            to={linkToVideo(item)}
+            onClick={(event) => {
+              that.setState({'loading': true});
+            }}
           >
           <div className="Channel_img"><img src={item.cover||item.icon} /></div>
           <span class="ChannelTitle">{item.title}</span>
@@ -300,6 +306,7 @@ class Videos extends Component {
   };
 
   componentWillMount() {
+    console.log('mount');
     const params = this.props.match.params;
     if (params && !params.url_id){
       const storeFilters = localStorage.getItem('videos_filters');
@@ -331,13 +338,15 @@ class Videos extends Component {
     const params = that.props.match.params;
 
     if (params && params.url_id){
-      if (this.state.loading){
-        that.loadVideo(params.url_id, params.url_id2);        
+      if (!that.video_id || (that.video_id != params.url_id) || (params.url_id2 != that.episode_id)){
+        that.video_id = params.url_id;
+        that.episode_id = params.url_id2;
+        that.loadVideo(params.url_id, params.url_id2);
       }
       return (
         <div>
           <br/>
-          {that.state.video ? that.showVideo() : ''}
+          {that.state.video && !that.state.loading ? that.showVideo() : ''}
           <div style={style}>
             <ClipLoader
               sizeUnit={"px"}
