@@ -122,6 +122,15 @@ class DashboardPage extends Component {
     }
 
 
+    if (this.params.url && this.params.url == 'profile'){
+      return (
+        <div className="Dashboard">
+        {!this.state.need_remove_device ? <div><MenuTop /><Profiles/></div> : <RemoveOneDevice/>}          
+        </div>
+      );      
+    }
+
+
     if (this.params.url && this.params.url == 'videos'){
       return (
         <div className="Dashboard">

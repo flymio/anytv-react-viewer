@@ -95,7 +95,7 @@ class Videos extends Component {
   }
   fetchFilters(){
     var that = this;
-    fetch('https://24h.tv/v2/videos/filters?access_token=' + that.state.token).then(function (response) {
+    fetch('https://24h.tv/v2/videos/filters?version=2.5&access_token=' + that.state.token).then(function (response) {
       return response.json();
     }).then(function (result) {
       that.setState({ 'filters': result});

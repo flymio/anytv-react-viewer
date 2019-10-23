@@ -12,12 +12,16 @@ const LinkButton = (props) => {
     to,
     onClick,
     className,
+    classNameReplace,
     ...rest
   } = props
 
   let _className = "btn btn-info ";
   if (className){
     _className += className;
+  }
+  if (classNameReplace){
+   _className = classNameReplace; 
   }
 
   return (

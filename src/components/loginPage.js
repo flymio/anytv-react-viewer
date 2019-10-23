@@ -71,7 +71,7 @@ class LoginPage extends Component {
     if (this.props.response.login.hasOwnProperty('response') && this.props.response.login.response.hasOwnProperty('access_token')) {
       isSuccess = 1;
       message = "ok";
-      setCookie('token', this.props.response.login.response.access_token, 1);
+      setCookie('token', this.props.response.login.response.access_token, 24);
     }
 
     const style = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };

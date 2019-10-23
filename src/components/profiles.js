@@ -17,31 +17,28 @@ class Profiles extends React.Component {
       this.state = {
         user: {},
         token: checkCookie(),
+        profiles: '',
+        profile: '',
       };    
 
     };
 
 
     saveCurrentProfile = function(item){
-      localStorage.setItem('user', JSON.stringify(item));
+      localStorage.setItem('profile', JSON.stringify(item));
+      this.setState({ 'profile': item});
+      window.top.location.reload();
     };
 
     getProfiles = function(){
       let that = this;
-      if (isEmpty(this.props.data)){
-        return <ClipLoader
-          sizeUnit={"px"}
-          size={50}
-          color={'#17a2b8'}
-        />;
-      }
-      return this.props.data.map((item, key) =>
+      let profiles = this.state.profiles;
+      return profiles.map((item, key) =>
         <div className={isActiveProfile(item, that)}>
-          <LinkButton 
+          <LinkButton classNameReplace="btn"
             onClick={(event) => {
               that.saveCurrentProfile(item)
             }} 
-            to={linkToProfile(item)}            
           >
           <img src={item.icon} /><br/>
           {item.name}
@@ -51,16 +48,21 @@ class Profiles extends React.Component {
     };
 
 
-    componentDidMount() {
-      const user = localStorage.getItem('user');
-      if (user){
-        this.setState({ user: JSON.parse(user) });  
-      }
-    }
 
+    componentWillMount() {
+      const storeProfiles = localStorage.getItem('profiles');
+      const storeProfile = localStorage.getItem('profile');
+      if (storeProfiles){
+        let profiles = JSON.parse(storeProfiles);
+        let profile = JSON.parse(storeProfile);
+        this.setState({ 'profiles': profiles});
+        this.setState({ 'profile': profile});
+      }
+    };
     render() {
         return (          
           <div className="profiles">
+            <h1>Выбери персонажа</h1>
             {this.getProfiles()}          
           </div>
         );
@@ -69,7 +71,7 @@ class Profiles extends React.Component {
 
 
 const isActiveProfile = (item, that) => {
-  if (that.state.user && that.state.user.id == item.id){
+  if (that.state.profile && that.state.profile.id == item.id){
     return "profile active";
   }
   return 'profile';

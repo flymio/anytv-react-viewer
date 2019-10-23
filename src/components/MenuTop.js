@@ -39,11 +39,16 @@ class MenuTop extends Component {
   componentWillMount() {
     const storeProfiles = localStorage.getItem('profiles');
     const storeProfile = localStorage.getItem('profile');
-    console.log(storeProfile);
     if (storeProfiles){
       let profiles = JSON.parse(storeProfiles);
-      this.setState({ 'profile': profiles[0]});
-      localStorage.setItem('profile', JSON.stringify(profiles[0]));
+      if (!storeProfile){
+        this.setState({ 'profile': profiles[0]});
+        localStorage.setItem('profile', JSON.stringify(profiles[0]));        
+      }
+      else{
+        let profile = JSON.parse(storeProfile);
+        this.setState({ 'profile': profile});
+      }
     }
     else{
       this.fetchProfiles();
@@ -58,7 +63,7 @@ class MenuTop extends Component {
 
       return (
         <div>
-          {this.state.profile ? <button class="btn btn-avatar"><img src={this.state.profile.icon} /><br/><span>{this.state.profile.name}</span></button> : '' }
+          {this.state.profile ? <LinkButton classNameReplace="btn btn-avatar" to='/dashboard/profile/'><img src={this.state.profile.icon} /><br/><span>{this.state.profile.name}</span></LinkButton> : '' }
           <LinkButton className={this.state.selected.channels} to='/dashboard/channels/'>Телеканалы</LinkButton> &nbsp;
           <LinkButton className={this.state.selected.programs} to='/dashboard/programs/'>ТВ архив</LinkButton> &nbsp;
           <LinkButton className={this.state.selected.videos} to='/dashboard/videos/'>Кинотеатры</LinkButton> &nbsp;
