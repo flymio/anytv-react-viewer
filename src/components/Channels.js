@@ -26,6 +26,8 @@ class Channels extends Component {
       page: 0,
       channels_categories: [],
       video: false,
+      current: new Date(),
+      currentTime: (new Date()).getTime(),
     };    
     this.fetchCategories = this.fetchCategories.bind(this);
     this.showChannels = this.showChannels.bind(this);
@@ -33,19 +35,26 @@ class Channels extends Component {
     this.showCategories = this.showCategories.bind(this);
     this.showChannel = this.showChannel.bind(this);
     this.loadChannel = this.loadChannel.bind(this);
+    this.showDates = this.showDates.bind(this);
+    this.showCurrentDate = this.showCurrentDate.bind(this);
+    this.changeVideo = this.changeVideo.bind(this);
 
 
     this.params = props.match.params;
   }
 
 
-  loadChannel(channel_id, timestamp){
+  loadChannel(channel_id, timestamp, force){
     let that = this;
-    if (!isEmpty(this.state.schedule)){
+    if (!isEmpty(this.state.schedule) && !force){
       return;
     }
+    let url = '';
+    if (force){
+      url="&start="+timestamp+"&end="+(parseInt(timestamp)+86400);
+    }
 
-    fetch('https://24h.tv/v2/channels/'+channel_id+'/schedule?access_token=' + that.state.token).then(function (response) {
+    fetch('https://24h.tv/v2/channels/'+channel_id+'/schedule?access_token=' + that.state.token + url).then(function (response) {
       return response.json();
     }).then(function (result) {
       that.setState({'schedule': result});
@@ -66,6 +75,53 @@ class Channels extends Component {
 
   }
 
+
+  showDates(){
+    var that = this;
+
+    const params = that.props.match.params;
+
+    var today = this.state.current;
+    var current = this.state.current.getTime();
+    var dateString = today.getDate() + "." + (today.getMonth() + 1);
+    var dates = [
+      {
+        title: 'сегодня, '+dateString,
+        seconds: current,
+      }
+    ];
+
+    for(let i=1; i<=5; i++){
+      let currentMilliseconds = current - 86400000*i;
+      let dt = new Date(currentMilliseconds);
+      let dateString = dt.getDate() + "." + (dt.getMonth() + 1);
+      dates.push({
+        title: dateString,
+        seconds: currentMilliseconds,
+      });
+    }
+
+    dates = dates.reverse();
+
+    return dates.map(function(item, index){
+      return (<button onClick={(event) => {
+            let date = item.seconds+"";
+            that.loadChannel(params.url_id, parseInt(date.substring(0,10))-86400, true);
+            that.setState({currentTime: item.seconds});
+          }}
+          className={that.showCurrentDate(item)}>{item.title}
+      </button>);
+    });
+
+  } 
+
+
+  showCurrentDate(item){
+    if (item.seconds == this.state.currentTime){
+      return "btn btn-date btn-success";
+    }
+    return "btn btn-date btn-info";
+  }
 
   showCover = function(){
     return <img src={this.state.video_cover} />;
@@ -90,8 +146,9 @@ class Channels extends Component {
         seconds_begin = data[i].timestamp;
       }
     }
-    data.map(function(item,key){
-    });
+    seconds_begin = data[0].timestamp;
+    hour_begin=0;
+
     return data.map(function(item,key){
       if (key >= hour_begin - 10){
         if (item.timestamp == seconds_begin){
@@ -109,7 +166,7 @@ class Channels extends Component {
         }
         return <li  className={showClassnameItem(item)}><a className="link-ajax" onClick={(event) => {
             that.changeVideo(item, event);
-          }}><small>{item.time}</small>, {item.program.title}</a></li>;
+          }}><small>{item.date}, {item.time}</small>, {item.program.title}</a></li>;
       }
       
     });    
@@ -124,11 +181,11 @@ class Channels extends Component {
         this.state.schedule[i].active=1;
       }
       if (this.state.schedule[i].timestamp != item.timestamp && this.state.schedule[i].active){
-        console.log(1444);
         this.state.schedule[i].active=0;
       }
     }
-    this.fetchCurrentStream(this.params.channel_id, item.timestamp);
+    this.setState({schedule: this.state.schedule});
+    this.fetchCurrentStream(this.props.match.params.url_id, item.timestamp);
   };
 
 
@@ -155,6 +212,7 @@ class Channels extends Component {
         {(!this.state.hasStream) ? this.showCover() : ''}
         {this.state.hasStream ? <ReactHLS url={this.state.streamUrl} autoplay="true" /> : ''}
         </div>
+        {this.showDates()}
         <ul class="list-group">
         {this.showSchedule(this.state.schedule)}
         </ul>
