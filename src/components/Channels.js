@@ -23,6 +23,7 @@ class Channels extends Component {
       schedule: [],
       channel: {},
       channelName: '',
+      startDate: '',
       page: 0,
       channels_categories: [],
       video: false,
@@ -46,12 +47,12 @@ class Channels extends Component {
 
   loadChannel(channel_id, timestamp, force){
     let that = this;
-    if (!isEmpty(this.state.schedule) && !force){
+    if (!isEmpty(this.state.schedule) && !force){  
       return;
     }
     let url = '';
-    if (force){
-      url="&start="+timestamp+"&end="+(parseInt(timestamp)+86400);
+    if (that.startDate){
+      url="&date="+that.startDate;
     }
 
     fetch('https://24h.tv/v2/channels/'+channel_id+'/schedule?access_token=' + that.state.token + url).then(function (response) {
@@ -84,10 +85,12 @@ class Channels extends Component {
     var today = this.state.current;
     var current = this.state.current.getTime();
     var dateString = today.getDate() + "." + (today.getMonth() + 1);
+    var dateFormat = (today.getYear()+1900)+"-"+(today.getMonth() + 1) + "-" + today.getDate(); 
     var dates = [
       {
         title: 'сегодня, '+dateString,
         seconds: current,
+        date: dateFormat,
       }
     ];
 
@@ -95,9 +98,11 @@ class Channels extends Component {
       let currentMilliseconds = current - 86400000*i;
       let dt = new Date(currentMilliseconds);
       let dateString = dt.getDate() + "." + (dt.getMonth() + 1);
+      let dateFormat = (dt.getYear()+1900)+"-"+(dt.getMonth() + 1) + "-" + dt.getDate(); 
       dates.push({
         title: dateString,
         seconds: currentMilliseconds,
+        date: dateFormat,
       });
     }
 
@@ -106,7 +111,8 @@ class Channels extends Component {
     return dates.map(function(item, index){
       return (<button onClick={(event) => {
             let date = item.seconds+"";
-            that.loadChannel(params.url_id, parseInt(date.substring(0,10))-86400, true);
+            that.startDate = item.date;
+            that.loadChannel(params.url_id, '', true);
             that.setState({currentTime: item.seconds});
           }}
           className={that.showCurrentDate(item)}>{item.title}
