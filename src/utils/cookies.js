@@ -22,8 +22,9 @@ export function getCookie(cname) {
   return '';
 }
 
-export function checkCookie() {
-  let user = getCookie('token');
+export function checkCookie(name='token') {
+  console.log(name);
+  let user = getCookie(name);
   if (user !== '') {
     return user;
   } else {

@@ -73,6 +73,15 @@ class Videos extends Component {
 
   showEpisodes(schedule){
     let that = this;
+
+    if (schedule.length == 0){
+      return <li className={that.showClassNameEpisode()}>
+          <span>
+            {that.state.video.title}
+          </span>
+          &nbsp;<JustLink replaceClass="badge badge-success ajax-link float-right" to={that.showLinkToEpisode(that.state.video)}>перейти к просмотру</JustLink>
+        </li>
+    }
       return schedule.map(function(item, key){      
         return (<li className={that.showClassNameEpisode(item.id, that.state.episode_id)}>
           <span>{item.list_title}
@@ -88,7 +97,7 @@ class Videos extends Component {
 
   showClassNameEpisode(item, episode_id){
     console.log(item, episode_id)
-    if (item == episode_id){
+    if (item && item == episode_id){
       return "list-group-item active";   
     }
     return "list-group-item";
@@ -113,6 +122,17 @@ class Videos extends Component {
     let episodes = {};
     episodes[episode_id]=true;
     that.setState({ 'episodes': episodes});
+
+    if (video_id && episode_id && episode_id == video_id){
+      fetch('https://24h.tv/v2/videos/'+video_id+'/stream?access_token=' + that.state.token).then(function (response) {
+        return response.json();
+      }).then(function (result) {
+        that.setState({ 'episode': result});
+        that.setState({ 'loading': false});
+        that.scroll(that.myRef);
+      });
+      return;
+    }
 
     fetch('https://24h.tv/v2/videos/'+video_id+'/episodes/'+episode_id+'/stream?access_token=' + that.state.token).then(function (response) {
       return response.json();
@@ -152,6 +172,7 @@ class Videos extends Component {
   showVideo(){
     let that = this;
     let item = this.state.video;
+    
     return <div className="Program">
           <h3>{item.title}</h3>
           <div className="ProgramDescription">{item.description}</div>
@@ -225,7 +246,7 @@ class Videos extends Component {
     fetch('https://24h.tv/v2/videos?access_token=' + that.state.token+url).then(function (response) {
       return response.json();
     }).then(function (result) {
-      if (that.state.page > 0 && that.state.videos.length){
+      if (that.state.page > 0 && that.state.videos && that.state.videos.length){
         result = that.state.videos.concat(result);          
       }
       console.log(result);

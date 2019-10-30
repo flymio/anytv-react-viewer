@@ -22,6 +22,7 @@ class Channels extends Component {
       loading: true,
       schedule: [],
       channel: {},
+      currentCategory:'',
       channelName: '',
       startDate: '',
       page: 0,
@@ -39,6 +40,7 @@ class Channels extends Component {
     this.showDates = this.showDates.bind(this);
     this.showCurrentDate = this.showCurrentDate.bind(this);
     this.changeVideo = this.changeVideo.bind(this);
+    this.showClassnameCategory = this.showClassnameCategory.bind(this);
 
 
     this.params = props.match.params;
@@ -178,6 +180,19 @@ class Channels extends Component {
     });    
   }
 
+  showClassnameCategory = (props) =>{
+    let className = "btn ChannelSelector";
+    if (!props && !this.state.currentCategory){
+      className += " active";
+      return className;
+    }
+    if (props && this.state.currentCategory && props.id == this.state.currentCategory){
+      className += " active";
+    }
+    return className;
+  }
+
+
   changeVideo = function(item, obj){
     if (item.disabled){
       return;
@@ -254,13 +269,16 @@ class Channels extends Component {
 
 
   showCategoriesList(){
+    let that = this;
     let data = this.state.channels_categories;
     if (!data){
       return '';
     }
     return data.map((item, key) =>
       <div className="Channel">
-        <button className="btn ChannelSelector">{item.name}</button>
+        <button className={that.showClassnameCategory(item)} onClick={(event) => {
+                that.setState({currentCategory: item.id});
+              }}>{item.name}</button>
       </div>);
 
   };
@@ -271,19 +289,21 @@ class Channels extends Component {
     if (!data){
       return '';
     }
-    return data.map((item, key) =>
-      <div className="Channel">
-          <LinkButton
-            onClick={(event) => {
-              that.setState({schedule: false});
-            }}
-            to={linkToChannel(item)}            
-          >
-          <div className="Channel_img"><img src={item.cover.light_bg||item.icon} /></div>
-          <span>{item.name}</span>
-          </LinkButton>
-      </div>
-    );
+    return data.map(function(item, key){
+      if (!that.state.currentCategory || item.category_id == that.state.currentCategory){
+        return <div className="Channel">
+            <LinkButton
+              onClick={(event) => {
+                that.setState({schedule: false});
+              }}
+              to={linkToChannel(item)}            
+            >
+            <div className="Channel_img"><img src={item.cover.light_bg||item.icon} /></div>
+            <span>{item.name}</span>
+            </LinkButton>
+        </div>        
+      }
+    });
   };
 
 
@@ -295,7 +315,9 @@ class Channels extends Component {
     }
     return <div className="ChannelContainer">
       <div className="ChannelFilters">
-        {this.state.channels ? <div className="Channel"><button className="btn ChannelSelector active">Все</button></div> : ''}
+        {this.state.channels ? <div className="Channel"><button className={that.showClassnameCategory()}  onClick={(event) => {                
+                that.setState({currentCategory: ''});
+              }}>Все</button></div> : ''}
         {this.showCategoriesList()}
       </div>
       <br clear="both" />
@@ -371,6 +393,8 @@ function isEmpty(obj) {
 const linkToChannel = (props) => {
   return "/dashboard/channels/" + props.id + "/";
 }
+
+
 
 const showClassnameItem = (props) =>{
   let className = "list-group-item";

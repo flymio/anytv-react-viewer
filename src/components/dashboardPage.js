@@ -3,7 +3,7 @@ import {Redirect, withRouter} from 'react-router-dom';
 import Profiles from "../components/profiles";
 import Channel from "../components/channel";
 import * as types from '../actions';
-import { checkCookie } from '../utils/cookies';
+import { checkCookie, setCookie } from '../utils/cookies';
 import LinkButton from './LinkButton';
 import MenuTop from './MenuTop';
 
@@ -25,6 +25,7 @@ class DashboardPage extends Component {
       data: {},
       token: checkCookie(),
       deviceID: localStorage.getItem('deviceID') || '',
+      deviceIDToken: checkCookie('deviceIDToken') || '',
       schedule: [],
       is_loading: true,
       need_remove_device: false,
@@ -34,8 +35,29 @@ class DashboardPage extends Component {
   }
 
 
+
+
+
   authByDeviceId() {
     var that = this;
+    var device = JSON.parse(that.state.deviceID);
+    var data = {
+      device_id: device.id,
+    };
+    fetch('https://24h.tv/v2/auth/device', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers:{
+        "Content-Type": "application/json",
+      }
+    }).then(function (response) {
+      return response.json();
+    }).then(function (result) {
+      console.log(result);
+      setCookie("deviceIDToken", result.access_token, 1);
+      setCookie("token", result.access_token, 24);
+      that.setState({"token": result.access_token, "deviceIDToken": result.access_token});
+    });    
   };
 
   registerDevice(data) {
@@ -68,6 +90,9 @@ class DashboardPage extends Component {
 
 
   componentWillMount() {
+    if (this.state.deviceID && !this.state.deviceIDToken){
+      this.authByDeviceId();
+    }    
   };
 
 
@@ -76,6 +101,10 @@ class DashboardPage extends Component {
     this.params = this.props.match.params;
 
     this.deviceID = localStorage.getItem('deviceID') || '';
+
+
+
+
 
     if (!this.deviceID && !this.params.url){
       localStorage.setItem('not_register', false);

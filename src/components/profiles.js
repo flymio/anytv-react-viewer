@@ -22,12 +22,40 @@ class Profiles extends React.Component {
       };    
 
     };
-
-
     saveCurrentProfile = function(item){
-      localStorage.setItem('profile', JSON.stringify(item));
-      this.setState({ 'profile': item});
-      window.top.location.reload();
+      var that = this;
+      let data = {
+        id: item.id,
+      };
+
+      //   localStorage.setItem('profile', JSON.stringify(item));
+      //   localStorage.removeItem('videos');
+      //   localStorage.removeItem('videos_filters');
+      //   localStorage.removeItem('programs');
+      //   localStorage.removeItem('programs_filters');
+      //   localStorage.removeItem('channels');
+      //   //window.top.location.reload();
+
+      // console.log(data);
+      // return;
+      fetch('https://24h.tv/v2/users/self/profile?access_token=' + that.state.token, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers:{
+          "Content-Type": "application/json",
+        }
+      }).then(function (response) {
+        return response.json();
+      }).then(function (result) {
+        localStorage.setItem('profile', JSON.stringify(item));
+        localStorage.removeItem('videos');
+        localStorage.removeItem('videos_filters');
+        localStorage.removeItem('programs');
+        localStorage.removeItem('programs_filters');
+        localStorage.removeItem('channels');
+        window.top.location.reload();
+      });    
+      
     };
 
     getProfiles = function(){
