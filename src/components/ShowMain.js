@@ -5,6 +5,7 @@ import LinkButton from './LinkButton';
 import { checkCookie } from '../utils/cookies';
 import { ClipLoader } from 'react-spinners';
 import * as types from '../actions';
+import Slider from "react-slick";
 
 class ShowMain extends Component {
 
@@ -27,7 +28,23 @@ class ShowMain extends Component {
     this.showFiltersList = this.showFiltersList.bind(this);
     this.loadFilters = this.loadFilters.bind(this);
     this.showFilter = this.showFilter.bind(this);
-  }
+    this.showWides = this.showWides.bind(this);
+  };
+
+  showWides(items, classname){
+
+    return items.map(function(item,index){
+      let img = item.images[0].src;
+      if (item.images[1] && item.images[1].type == 'wide'){
+        img = item.images[1].src;
+      }
+
+      return (
+        <div><img src={img} className={classname} /></div>
+      )
+    });
+
+  };  
 
 
 
@@ -39,12 +56,47 @@ class ShowMain extends Component {
 
     var v = this.state[filter_name][0];
     var a = v.programs;
-    if (v.type == 'vod'){
+    if (v.template == 'vod'){
       a = v.videos;
     }
+    if (v.template == 'promo-wide'){
+      a = v.promo_wides;
+    }
+    if (v.template == 'promo-standart'){
+      a = v.promo_standarts;
+    }
+
     if (isEmpty(a)){
       return 'empty';
     }
+
+    let settings = {
+      dots: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1
+    };;    
+
+    if (v.template == 'promo-wide'){
+      return (
+      <div><Slider {...settings}>
+        {this.showWides(a, 'slide-maxi')}
+        <br/>
+      </Slider><br/></div>);    
+    }
+
+
+    if (v.template == 'promo-standart'){
+      settings.slidesToShow = 4;
+
+      return (
+      <div><Slider {...settings}>
+        {this.showWides(a, 'slide-mini')}
+        <br/>
+      </Slider><br/></div>);    
+    }
+
 
     return a.map(function(item, index){
       if (index<6){
@@ -74,7 +126,7 @@ class ShowMain extends Component {
     return this.state.filters.map(function(item, index){
       return (
         <div className="well well-lg">
-          <h3>{item.name}</h3>
+          <h3>{item.name}, ID: {item.id} !{index}!{item.type}!{item.template}</h3>
           <hr/>
           {that.showFilter(item)}
         </div>);

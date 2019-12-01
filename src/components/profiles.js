@@ -50,6 +50,7 @@ class Profiles extends React.Component {
         localStorage.setItem('profile', JSON.stringify(item));
         localStorage.removeItem('videos');
         localStorage.removeItem('videos_filters');
+        localStorage.removeItem('mainFilters');
         localStorage.removeItem('programs');
         localStorage.removeItem('programs_filters');
         localStorage.removeItem('channels');
