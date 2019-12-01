@@ -64,6 +64,7 @@ class MenuTop extends Component {
       return (
         <div>
           {this.state.profile ? <LinkButton classNameReplace="btn btn-avatar" to='/dashboard/profile/'><img src={this.state.profile.icon} /><br/><span>{this.state.profile.name}</span></LinkButton> : '' }
+          <LinkButton className={this.state.selected.main} to='/dashboard/main/'>Главная</LinkButton> &nbsp;
           <LinkButton className={this.state.selected.channels} to='/dashboard/channels/'>Телеканалы</LinkButton> &nbsp;
           <LinkButton className={this.state.selected.programs} to='/dashboard/programs/'>ТВ архив</LinkButton> &nbsp;
           <LinkButton className={this.state.selected.videos} to='/dashboard/videos/'>Кинотеатры</LinkButton> &nbsp;

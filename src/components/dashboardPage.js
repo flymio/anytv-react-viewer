@@ -13,6 +13,7 @@ import Videos from './Videos';
 
 
 import RemoveOneDevice from './RemoveOneDevice';
+import ShowMain from './ShowMain';
 
 import "./dashboardPage.css";
 
@@ -134,6 +135,17 @@ class DashboardPage extends Component {
       );      
     }
 
+
+    if ((!this.params.url || this.params.url == 'main')  && this.deviceID){
+
+      return (
+        <div className="Dashboard">
+          <MenuTop />
+          <ShowMain/>
+        </div>
+      );      
+
+    }
     if (this.params.url && this.params.url == 'channels'){
       return (
         <div className="Dashboard">
