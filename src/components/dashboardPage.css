@@ -38,9 +38,13 @@
 }
 
 img.slide-maxi {
-  width:1000px;
+  width:1070px;
 }
 
 img.slide-mini {
   width:240px;
+}
+
+img.slide-program {
+  width:260px;
 }

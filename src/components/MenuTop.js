@@ -60,6 +60,9 @@ class MenuTop extends Component {
     if (this.props.match.params && this.props.match.params.url){
       this.state.selected[this.props.match.params.url] = 'btn-selected';
     }
+    else{
+      this.state.selected['main'] = 'btn-selected';
+    }
 
       return (
         <div>

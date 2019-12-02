@@ -164,7 +164,7 @@ class Videos extends Component {
   showEpisode(){
     let that = this;
     return (<div>
-      {this.state.episode && this.state.episode.hls ? <div ref={this.myRef}><ReactHLS url={this.state.episode.hls}/></div> : <div ref={this.myRef}></div>}
+      {this.state.episode && this.state.episode.hls ? <div ref={this.myRef}><ReactHLS width="670" url={this.state.episode.hls}/></div> : <div ref={this.myRef}></div>}
     </div>);
   }
 

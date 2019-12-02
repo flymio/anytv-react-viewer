@@ -6,6 +6,8 @@ import { checkCookie } from '../utils/cookies';
 import { ClipLoader } from 'react-spinners';
 import * as types from '../actions';
 import Slider from "react-slick";
+import JustLink from './JustLink';
+
 
 class ShowMain extends Component {
 
@@ -29,7 +31,55 @@ class ShowMain extends Component {
     this.loadFilters = this.loadFilters.bind(this);
     this.showFilter = this.showFilter.bind(this);
     this.showWides = this.showWides.bind(this);
+    this.showProgram = this.showProgram.bind(this);
+    this.showVideo = this.showVideo.bind(this);
+    this.showLinkToProgram = this.showLinkToProgram.bind(this);
   };
+
+
+  showLinkToProgram(item){
+    return "/dashboard/programs/"+item.id+"/";
+  };
+
+  showLinkToVideo(item){
+    return "/dashboard/videos/"+item.id+"/";
+  };
+
+  showVideo(items, classname){
+    var that = this;
+    return items.map(function(item,index){
+      let img = item.img[0].src;
+      for(let i=0;i<item.img.length;i++){
+        if (item.img[i].ar == "4:3"){
+          img = item.img[i].src;
+        }
+      }
+      return (
+        <div><JustLink replaceClass="badge badge-success ajax-link float-right" to={that.showLinkToVideo(item)}><img src={img} className={classname} /></JustLink></div>
+      )
+    });
+  }; 
+
+
+
+
+  showProgram(items, classname){
+    let that = this;
+    return items.map(function(item,index){
+      let img = item.img[0].src;
+      for(let i=0;i<item.img.length;i++){
+        if (item.img[i].ar == "16:9"){
+          img = item.img[i].src;
+        }
+      }
+      return (
+        <div><JustLink replaceClass="badge badge-success ajax-link float-right" to={that.showLinkToProgram(item)}><img src={img} className={classname} /></JustLink></div>
+      )
+    });
+  };  
+
+
+
 
   showWides(items, classname){
 
@@ -71,8 +121,6 @@ class ShowMain extends Component {
     }
 
     let settings = {
-      dots: true,
-      infinite: true,
       speed: 500,
       slidesToShow: 1,
       slidesToScroll: 1
@@ -96,6 +144,26 @@ class ShowMain extends Component {
         <br/>
       </Slider><br/></div>);    
     }
+
+
+    if (v.type == 'program'){
+      settings.slidesToShow = 4;
+      return (
+      <div><Slider {...settings}>
+        {this.showProgram(a, 'slide-program')}
+        <br/>
+      </Slider><br/></div>);      
+    }    
+
+
+    if (v.type == 'video'){
+      settings.slidesToShow = 4;
+      return (
+      <div><Slider {...settings}>
+        {this.showVideo(a, 'slide-program')}
+        <br/>
+      </Slider><br/></div>);      
+    }  
 
 
     return a.map(function(item, index){
@@ -123,10 +191,11 @@ class ShowMain extends Component {
       return '';
     }
 
+    //<span style="display:none">, ID: {item.id} !{index}!{item.type}!{item.template}</span>
     return this.state.filters.map(function(item, index){
       return (
         <div className="well well-lg">
-          <h3>{item.name}, ID: {item.id} !{index}!{item.type}!{item.template}</h3>
+          <h3>{item.name}</h3>
           <hr/>
           {that.showFilter(item)}
         </div>);
