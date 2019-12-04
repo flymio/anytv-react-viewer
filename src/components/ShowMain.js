@@ -223,7 +223,7 @@ class ShowMain extends Component {
 
   fetchFilters(){
     var that = this;
-    fetch('https://24h.tv/v2/filters?version=main_3.0&access_token=' + that.state.token
+    fetch(process.env.REACT_APP_API_URL+'/v2/filters?version=main_3.0&access_token=' + that.state.token
     ).then(function (response) {
       return response.json();
     }).then(function (result) {
@@ -237,7 +237,7 @@ class ShowMain extends Component {
   fetchOneFilter(id){
     var that = this;
     var filter_name = 'mainfilter_'+id;
-    fetch('https://24h.tv/v2/filters/'+id+'?version=main_3.0&access_token=' + that.state.token
+    fetch(process.env.REACT_APP_API_URL+'/v2/filters/'+id+'?version=main_3.0&access_token=' + that.state.token
     ).then(function (response) {
       return response.json();
     }).then(function (result) {

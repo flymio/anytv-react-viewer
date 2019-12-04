@@ -98,7 +98,7 @@ class Channel extends Component {
     if (!ts){
       ts='';
     }
-    fetch('https://24h.tv/v2/channels/'+ channel_id +'/stream?access_token=' + that.state.token+"&ts="+ts).then(function (response) {
+    fetch(process.env.REACT_APP_API_URL+'/v2/channels/'+ channel_id +'/stream?access_token=' + that.state.token+"&ts="+ts).then(function (response) {
       return response.json();
     }).then(function (result) {
       console.log(result);

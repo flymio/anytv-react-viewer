@@ -26,7 +26,7 @@ class MenuTop extends Component {
 
   fetchProfiles() {
     var that = this;
-    fetch('https://24h.tv/v2/users/self/profiles?access_token=' + that.state.token).then(function (response) {
+    fetch(process.env.REACT_APP_API_URL+'/v2/users/self/profiles?access_token=' + that.state.token).then(function (response) {
       return response.json();
     }).then(function (result) {
       that.setState({ 'profile': result[0]});

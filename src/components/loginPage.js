@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { checkCookie } from '../utils/cookies';
-import { loginUserAction } from '../actions/authenticationActions';
+import { loginUserAction, registerUserAction } from '../actions/authenticationActions';
 import { setCookie } from '../utils/cookies';
 import { ClipLoader } from 'react-spinners';
 import "./loginPage.css";
@@ -19,6 +19,7 @@ class LoginPage extends Component {
     this.state = {
       login: "",
       password: "",
+      autoreg: false,
       token: "",
       loading: false,
       message: '',
@@ -30,6 +31,21 @@ class LoginPage extends Component {
     return (this.state.login.length > 0 && this.state.password.length > 0) && !this.state.loading;
   }
 
+
+  handleAutoreg = event => {
+    event.preventDefault();
+
+
+    let login = Math.random().toString(36).slice(-8);
+    let password = Math.random().toString(36).slice(-8);
+
+    const data = {
+      login, password
+    };
+
+
+    this.props.dispatch(registerUserAction(data));
+  };
 
   handleChange = event => {
     this.setState({
@@ -55,7 +71,25 @@ class LoginPage extends Component {
   }
 
   componentDidMount() {
-    document.title = 'React Login';
+
+    console.log(process.env);
+
+    var that = this;
+    fetch(process.env.REACT_APP_API_URL+'/v2/users/self/network', {
+      method: 'GET',
+      headers:{
+        "Content-Type": "application/json",
+      }
+    }).then(function (response) {
+      return response.json();
+    }).then(function (result) {    
+      console.log(result);
+
+      if (result.is_registration_allowed){ // && result.is_autoregistration_allowed){
+        that.setState({ autoreg: true});
+      }
+    });    
+    document.title = '24h.tv Login';
   }
 
   render() {
@@ -78,13 +112,13 @@ class LoginPage extends Component {
 
     return (
       <div className="Login">
-        <h3>Login Page</h3>
+        <h3>Авторизация</h3>
         {isLogged ? <Redirect to='dashboard' />: '' }
         {!isSuccess ? <div>{message}</div> : <Redirect to='dashboard' />}
         <form onSubmit={this.onHandleLogin}>
           {this.state.message ? <Alert bsStyle="danger">Unable to log in with provided credentials.</Alert> : ''}
           <FormGroup controlId="login" bsSize="large">
-            <ControlLabel>Login</ControlLabel>
+            <ControlLabel>Логин</ControlLabel>
             <FormControl
               autoFocus
               type="text"
@@ -94,7 +128,7 @@ class LoginPage extends Component {
             />
           </FormGroup>
           <FormGroup controlId="password" bsSize="large">
-            <ControlLabel>Password</ControlLabel>
+            <ControlLabel>Пароль</ControlLabel>
             <FormControl
               id="password"
               value={this.state.password}
@@ -109,8 +143,16 @@ class LoginPage extends Component {
             disabled={!this.validateForm()}
             type="submit"
           >
-            Login
+            Войти
           </Button>
+          <br/>
+          {this.state.autoreg? <Button
+            block
+            bsSize="large"
+            bsStyle="primary"            
+            type="submit"
+            onClick={this.handleAutoreg}
+          >Войти без регистрации</Button> : ''}
           <div style={style}>
           <ClipLoader
             sizeUnit={"px"}
@@ -119,7 +161,7 @@ class LoginPage extends Component {
             loading={this.state.loading}
           />
           </div>
-        </form>
+        </form>        
       </div>
     );
   }

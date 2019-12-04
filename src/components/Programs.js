@@ -46,7 +46,7 @@ class Programs extends Component {
 
   loadProgram(program_id){
     let that = this;
-      fetch('https://24h.tv/v2/programs/'+program_id+'/schedule?access_token=' + that.state.token).then(function (response) {
+      fetch(process.env.REACT_APP_API_URL+'/v2/programs/'+program_id+'/schedule?access_token=' + that.state.token).then(function (response) {
         return response.json();
       }).then(function (result) {
         that.setState({ 'program': result});
@@ -114,7 +114,7 @@ class Programs extends Component {
       let offset = parseInt(this.state.page * that.state.limit);
       url+="&offset="+offset;
     }
-    fetch('https://24h.tv/v2/programs?access_token=' + that.state.token+url).then(function (response) {
+    fetch(process.env.REACT_APP_API_URL+'/v2/programs?access_token=' + that.state.token+url).then(function (response) {
       return response.json();
     }).then(function (result) {
       if (that.state.page > 0 ){
@@ -130,7 +130,7 @@ class Programs extends Component {
 
   fetchFilters(){
     var that = this;
-    fetch('https://24h.tv/v2/programs/filters?access_token=' + that.state.token).then(function (response) {
+    fetch(process.env.REACT_APP_API_URL+'/v2/programs/filters?access_token=' + that.state.token).then(function (response) {
       return response.json();
     }).then(function (result) {
       that.setState({ 'filters': result});

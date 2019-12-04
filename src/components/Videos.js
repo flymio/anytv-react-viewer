@@ -104,7 +104,7 @@ class Videos extends Component {
   }
   fetchFilters(){
     var that = this;
-    fetch('https://24h.tv/v2/videos/filters?version=2.5&access_token=' + that.state.token).then(function (response) {
+    fetch(process.env.REACT_APP_API_URL+'/v2/videos/filters?version=2.5&access_token=' + that.state.token).then(function (response) {
       return response.json();
     }).then(function (result) {
       that.setState({ 'filters': result});
@@ -124,7 +124,7 @@ class Videos extends Component {
     that.setState({ 'episodes': episodes});
 
     if (video_id && episode_id && episode_id == video_id){
-      fetch('https://24h.tv/v2/videos/'+video_id+'/stream?access_token=' + that.state.token).then(function (response) {
+      fetch(process.env.REACT_APP_API_URL+'/v2/videos/'+video_id+'/stream?access_token=' + that.state.token).then(function (response) {
         return response.json();
       }).then(function (result) {
         that.setState({ 'episode': result});
@@ -134,7 +134,7 @@ class Videos extends Component {
       return;
     }
 
-    fetch('https://24h.tv/v2/videos/'+video_id+'/episodes/'+episode_id+'/stream?access_token=' + that.state.token).then(function (response) {
+    fetch(process.env.REACT_APP_API_URL+'/v2/videos/'+video_id+'/episodes/'+episode_id+'/stream?access_token=' + that.state.token).then(function (response) {
       return response.json();
     }).then(function (result) {
       that.scroll(that.myRef);
@@ -147,7 +147,7 @@ class Videos extends Component {
 
   loadVideo(video_id, episode_id){
     var that = this;
-    fetch('https://24h.tv/v2/videos/'+video_id+'?access_token=' + that.state.token).then(function (response) {
+    fetch(process.env.REACT_APP_API_URL+'/v2/videos/'+video_id+'?access_token=' + that.state.token).then(function (response) {
       return response.json();
     }).then(function (result) {
       that.setState({ 'video': result});
@@ -243,7 +243,7 @@ class Videos extends Component {
       let offset = parseInt(this.state.page * that.state.limit);
       url+="&offset="+offset;
     }
-    fetch('https://24h.tv/v2/videos?access_token=' + that.state.token+url).then(function (response) {
+    fetch(process.env.REACT_APP_API_URL+'/v2/videos?access_token=' + that.state.token+url).then(function (response) {
       return response.json();
     }).then(function (result) {
       if (that.state.page > 0 && that.state.videos && that.state.videos.length){

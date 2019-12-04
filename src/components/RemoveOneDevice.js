@@ -26,7 +26,7 @@ class RemoveOneDevice extends Component {
 
   fetchDevices(){
     var that = this;
-    fetch('https://24h.tv/v2/users/self/devices?access_token=' + that.state.token
+    fetch(process.env.REACT_APP_API_URL+'/v2/users/self/devices?access_token=' + that.state.token
     ).then(function (response) {
       return response.json();
     }).then(function (result) {
@@ -40,7 +40,7 @@ class RemoveOneDevice extends Component {
   removeDevice(data){
     if (window.confirm('Вы хотите удалить это устройство?')){
       var that = this;
-      fetch('https://24h.tv/v2/users/self/devices/'+data.id+'?access_token=' + that.state.token, {
+      fetch(process.env.REACT_APP_API_URL+'/v2/users/self/devices/'+data.id+'?access_token=' + that.state.token, {
         method: 'DELETE',
         headers:{
           "Content-Type": "application/json",

@@ -73,7 +73,7 @@ class Profile extends Component {
 
   fetchChannelsCategories() {
     var that = this;
-    fetch('https://24h.tv/v2/channels/categories?access_token=' + that.state.token).then(function (response) {
+    fetch(process.env.REACT_APP_API_URL+'/v2/channels/categories?access_token=' + that.state.token).then(function (response) {
       return response.json();
     }).then(function (result) {
       console.log(result);

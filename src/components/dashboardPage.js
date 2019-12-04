@@ -45,7 +45,7 @@ class DashboardPage extends Component {
     var data = {
       device_id: device.id,
     };
-    fetch('https://24h.tv/v2/auth/device', {
+    fetch(process.env.REACT_APP_API_URL+'/v2/auth/device', {
       method: 'POST',
       body: JSON.stringify(data),
       headers:{
@@ -68,7 +68,7 @@ class DashboardPage extends Component {
       return;
     }
     console.log('registerDevice');
-    fetch('https://24h.tv/v2/users/self/devices?access_token=' + that.state.token, {
+    fetch(process.env.REACT_APP_API_URL+'/v2/users/self/devices?access_token=' + that.state.token, {
       method: 'POST',
       body: JSON.stringify(data),
       headers:{

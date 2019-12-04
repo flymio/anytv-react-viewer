@@ -38,7 +38,7 @@ class Profiles extends React.Component {
 
       // console.log(data);
       // return;
-      fetch('https://24h.tv/v2/users/self/profile?access_token=' + that.state.token, {
+      fetch(process.env.REACT_APP_API_URL+'/v2/users/self/profile?access_token=' + that.state.token, {
         method: 'POST',
         body: JSON.stringify(data),
         headers:{

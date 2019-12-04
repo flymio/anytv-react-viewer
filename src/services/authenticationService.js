@@ -1,6 +1,8 @@
 export const registerUserService = (request) => {
-  const REGISTER_API_ENDPOINT = 'https://24h.tv/v2/auth/login';
+  const REGISTER_API_ENDPOINT = process.env.REACT_APP_API_URL+'/v2/auth/login';
   
+
+
   const parameters = {
     method: 'POST',
     headers: {
@@ -19,7 +21,7 @@ export const registerUserService = (request) => {
 };
 
 export const loginUserService = (request) => {
-  const LOGIN_API_ENDPOINT = 'https://24h.tv/v2/auth/login';
+  const LOGIN_API_ENDPOINT = process.env.REACT_APP_API_URL + '/v2/auth/login';
 
   const parameters = {
     method: 'POST',
