@@ -36,11 +36,12 @@ class LoginPage extends Component {
     event.preventDefault();
 
 
-    let login = Math.random().toString(36).slice(-8);
+    let username = Math.random().toString(36).slice(-8);
     let password = Math.random().toString(36).slice(-8);
+    let login = username;
 
     const data = {
-      login, password
+      username, password, login
     };
 
 
