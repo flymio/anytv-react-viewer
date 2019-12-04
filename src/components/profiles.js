@@ -88,7 +88,6 @@ class Profiles extends React.Component {
     componentWillMount() {
       const storeProfiles = localStorage.getItem('profiles');
       const storeProfile = localStorage.getItem('profile');
-      return;
       if (storeProfiles){
         let profiles = JSON.parse(storeProfiles);
         if (profiles && profiles[0]){
@@ -101,8 +100,9 @@ class Profiles extends React.Component {
     render() {
         return (          
           <div className="profiles">
-            {this.state.profile ? <div><h1>Выбери персонажа</h1>{this.getProfiles()}</div> : ''}          
-            <JustLink replaceClass="btn btn-info" to="/dashboard/profile/create/">Создать новый персонаж</JustLink>
+          <h1>Выбери персонажа</h1>
+          {this.getProfiles()}
+          <div className="profile"><JustLink replaceClass="btn" to="/dashboard/profile/create/"><img src="/avatar.png" /><br/>Создать</JustLink></div>
           </div>
         );
     }

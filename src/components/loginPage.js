@@ -72,9 +72,6 @@ class LoginPage extends Component {
   }
 
   componentDidMount() {
-
-    console.log(process.env);
-
     var that = this;
     fetch(process.env.REACT_APP_API_URL+'/v2/users/self/network', {
       method: 'GET',
