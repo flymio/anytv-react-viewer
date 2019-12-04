@@ -3,6 +3,7 @@ import LinkButton from './LinkButton';
 import { ClipLoader } from 'react-spinners';
 import {checkCookie} from '../utils/cookies';
 import {withRouter} from 'react-router-dom';
+import JustLink from './JustLink';
 
 import "./profiles.css";
 
@@ -62,6 +63,12 @@ class Profiles extends React.Component {
     getProfiles = function(){
       let that = this;
       let profiles = this.state.profiles;
+
+
+      if (isEmpty(profiles)){
+        return '';
+      }
+
       return profiles.map((item, key) =>
         <div className={isActiveProfile(item, that)}>
           <LinkButton classNameReplace="btn"
@@ -81,18 +88,21 @@ class Profiles extends React.Component {
     componentWillMount() {
       const storeProfiles = localStorage.getItem('profiles');
       const storeProfile = localStorage.getItem('profile');
+      return;
       if (storeProfiles){
         let profiles = JSON.parse(storeProfiles);
-        let profile = JSON.parse(storeProfile);
-        this.setState({ 'profiles': profiles});
-        this.setState({ 'profile': profile});
+        if (profiles && profiles[0]){
+          let profile = JSON.parse(storeProfile);
+          this.setState({ 'profiles': profiles});
+          this.setState({ 'profile': profile});          
+        }
       }
     };
     render() {
         return (          
           <div className="profiles">
-            <h1>Выбери персонажа</h1>
-            {this.getProfiles()}          
+            {this.state.profile ? <div><h1>Выбери персонажа</h1>{this.getProfiles()}</div> : ''}          
+            <JustLink replaceClass="btn btn-info" to="/dashboard/profile/create/">Создать новый персонаж</JustLink>
           </div>
         );
     }

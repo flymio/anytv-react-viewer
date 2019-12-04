@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Redirect, withRouter} from 'react-router-dom';
 import Profiles from "../components/profiles";
+import ProfileAdd from "../components/ProfileAdd.js";
 import Channel from "../components/channel";
 import * as types from '../actions';
 import { checkCookie, setCookie } from '../utils/cookies';
@@ -163,10 +164,19 @@ class DashboardPage extends Component {
     }
 
 
-    if (this.params.url && this.params.url == 'profile'){
+    if (this.params.url && this.params.url == 'profile' && !this.params.url_id){
       return (
         <div className="Dashboard">
         {!this.state.need_remove_device ? <div><MenuTop /><Profiles/></div> : <RemoveOneDevice/>}          
+        </div>
+      );      
+    }
+
+
+    if (this.params.url && this.params.url == 'profile' && this.params.url_id && this.params.url_id == 'create'){
+      return (
+        <div className="Dashboard">
+        {!this.state.need_remove_device ? <div><MenuTop /><ProfileAdd/></div> : <RemoveOneDevice/>}          
         </div>
       );      
     }
