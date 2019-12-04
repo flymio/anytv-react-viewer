@@ -13,6 +13,7 @@ class MenuTop extends Component {
       data: {},
       profile: {},      
       token: checkCookie(),
+      profileNull: false,
       selected: {
         channels:'',
         programs:'',
@@ -41,13 +42,19 @@ class MenuTop extends Component {
     const storeProfile = localStorage.getItem('profile');
     if (storeProfiles){
       let profiles = JSON.parse(storeProfiles);
+      
       if (!storeProfile){
         this.setState({ 'profile': profiles[0]});
         localStorage.setItem('profile', JSON.stringify(profiles[0]));        
       }
       else{
-        let profile = JSON.parse(storeProfile);
-        this.setState({ 'profile': profile});
+        if (profiles[0]){
+          let profile = JSON.parse(storeProfile);
+          this.setState({ 'profile': profile});
+        }
+        else{
+          this.setState({ 'profileNull': true});
+        }
       }
     }
     else{
@@ -66,7 +73,8 @@ class MenuTop extends Component {
 
       return (
         <div>
-          {this.state.profile ? <LinkButton classNameReplace="btn btn-avatar" to='/dashboard/profile/'><img src={this.state.profile.icon} /><br/><span>{this.state.profile.name}</span></LinkButton> : '' }
+          {this.state.profileNull ? <LinkButton classNameReplace="btn btn-avatar" to='/dashboard/profile/'><img src="/avatar.png" /><br/><span>No Name</span></LinkButton> : '' }
+          {this.state.profile && !this.state.profileNull ? <LinkButton classNameReplace="btn btn-avatar" to='/dashboard/profile/'><img src={this.state.profile.icon} /><br/><span>{this.state.profile.name}</span></LinkButton> : '' }
           <LinkButton className={this.state.selected.main} to='/dashboard/main/'>Главная</LinkButton> &nbsp;
           <LinkButton className={this.state.selected.channels} to='/dashboard/channels/'>Телеканалы</LinkButton> &nbsp;
           <LinkButton className={this.state.selected.programs} to='/dashboard/programs/'>ТВ архив</LinkButton> &nbsp;

@@ -9,7 +9,7 @@ export const registerUserService = (request) => {
     },
     body: JSON.stringify(request.user)
   };
-  
+
   console.log(request);
 
   const parameters_login = {
@@ -28,21 +28,13 @@ export const registerUserService = (request) => {
     .then(json => {
       return json;
     }).then(function (result) {
-      console.log(result);
-
-
-      // return fetch(LOGIN_API_ENDPOINT, parameters_login)
-      //   .then(response => {
-      //     return response.json();
-      //   })
-      //   .then(json => {
-      //     return json;
-      //   });
-
-
-
-
-      return result;
+      return fetch(LOGIN_API_ENDPOINT, parameters_login)
+        .then(response => {
+          return response.json();
+        })
+        .then(json => {
+          return json;
+        });
     });
 };
 
