@@ -65,17 +65,23 @@ class ShowMain extends Component {
 
   showProgram(items, classname){
     let that = this;
-    return items.map(function(item,index){
-      let img = item.img[0].src;
-      for(let i=0;i<item.img.length;i++){
-        if (item.img[i].ar == "16:9"){
-          img = item.img[i].src;
+    if (items){
+      console.log(items);
+      return items.map(function(item,index){
+        let img = '/avatar.png';
+        if (item.img[0] && item.img[0].src){
+          img = item.img[0].src;  
         }
-      }
-      return (
-        <div><JustLink replaceClass="badge badge-success ajax-link float-right" to={that.showLinkToProgram(item)}><img src={img} className={classname} /></JustLink></div>
-      )
-    });
+        for(let i=0;i<item.img.length;i++){
+          if (item.img[i].ar == "16:9"){
+            img = item.img[i].src;
+          }
+        }
+        return (
+          <div><JustLink replaceClass="badge badge-success ajax-link float-right" to={that.showLinkToProgram(item)}><img src={img} className={classname} /></JustLink></div>
+        )
+      });
+    }
   };  
 
 
