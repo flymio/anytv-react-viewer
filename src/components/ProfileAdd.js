@@ -7,6 +7,7 @@ import JustLink from './JustLink';
 import "./profiles.css";
 import { Button, FormGroup, FormControl, ControlLabel, Alert} from "react-bootstrap";
 
+import "./ProfileAdd.css";
 
 
 
@@ -53,32 +54,44 @@ function resizeImage(image, maxWidth, maxHeight, quality) {
 
 class ScalingUpload extends React.Component {
 
-    getInitialState() {
-        return {};
-    }
+
+    constructor(props){
+      super(props);
+      this.state = {
+        dataUrl: '',
+      };    
+
+
+      this._onChange = this._onChange.bind(this);
+    };
+
+
 
     _onChange(e) {
-        var files = e.target.files;
-        var self = this;
-        var maxWidth = this.props.maxWidth;
-        var maxHeight = this.props.maxHeight;
+        let files = e.target.files;
+        if (!e.target.files){
+          return;
+        }
+        let self = this;
+        let maxWidth = self.props.maxWidth;
+        let maxHeight = self.props.maxHeight;
+        let changeEvent = self.props.onChange; 
         resize(files[0], maxWidth, maxHeight, function (resizedDataUrl) {
+            if (changeEvent){
+              let image = resizedDataUrl.replace("data:image/jpeg;base64,","");
+              changeEvent(image);
+            }
             self.setState({ dataUrl: resizedDataUrl });
         });
     }
 
     render() {
-        var image;
-
-        var dataUrl = this.state.dataUrl;
-        if (dataUrl) {
-            image = <img src={dataUrl} />
-        }
-
         return <div>
-            <input ref="upload" type="file" accept="image/*" onChange={ this._onChange }/>
-            { image }
+        <div class="photo">
+            {this.state.dataUrl ? <div><img className="photo__img"  src={this.state.dataUrl} /></div> : <div><img className="photo__img"  src="/avatar.png" /></div>}
+            <input ref="upload" type="file" accept="image/*" onChange={ this._onChange } className="photo__input" />
         </div>
+        </div>            
     }
 };
 
@@ -88,6 +101,7 @@ class ProfileAdd extends React.Component {
   constructor(props){
     super(props);
     this.createProfile = this.createProfile.bind(this);
+    this.changeAvatar = this.changeAvatar.bind(this);
 
     this.state = {
       user: {},
@@ -97,9 +111,14 @@ class ProfileAdd extends React.Component {
       profiles: '',
       profile: '',
       loading: true,
+      icon: '',
     };    
 
   };
+
+  changeAvatar(image){
+    this.setState({icon: image})
+  }
 
   handleChange = event => {
     this.setState({
@@ -119,6 +138,10 @@ class ProfileAdd extends React.Component {
       name: that.state.name,
       profile_id: this.state.profile_id,
     };
+
+    if (this.state.icon){
+      data.icon = this.state.icon;
+    }
     that.setState({loading: true});
     fetch(process.env.REACT_APP_API_URL+'/v2/users/self/profiles?access_token=' + that.state.token, {
       method: 'POST',
@@ -129,16 +152,16 @@ class ProfileAdd extends React.Component {
     }).then(function (response) {
       return response.json();
     }).then(function (result) {
-      //console.log(result);
-      localStorage.removeItem('videos');
-      localStorage.removeItem('videos_filters');
-      localStorage.removeItem('mainFilters');
-      localStorage.removeItem('programs');
-      localStorage.removeItem('programs_filters');
-      localStorage.removeItem('channels');
-      localStorage.removeItem('profiles');
-      localStorage.removeItem('profile');
-      window.top.location.reload();
+      console.log(result);
+      //localStorage.removeItem('videos');
+      //localStorage.removeItem('videos_filters');
+      //localStorage.removeItem('mainFilters');
+      //localStorage.removeItem('programs');
+      //localStorage.removeItem('programs_filters');
+      //localStorage.removeItem('channels');
+      //localStorage.removeItem('profiles');
+      //localStorage.removeItem('profile');
+     // window.top.location.reload();
     });    
     
   };
@@ -198,7 +221,7 @@ class ProfileAdd extends React.Component {
                 onChange={this.handleChange}
               />
             </FormGroup>   
-            <ScalingUpload maxHeight={100} maxWidth={100} onChange={ this._onChange } />       
+            <ScalingUpload maxHeight={200} maxWidth={200} onChange={ this.changeAvatar } />       
             <Button
               block
               bsSize="large"
