@@ -5,6 +5,7 @@ import { HashRouter } from 'react-router-dom'
 import { BrowserRouter as Router } from "react-router-dom";
 import configureStore from './store/configureStore';
 import './index.css';
+import './header.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {withRouter} from 'react-router-dom';
 import LinkButton from './LinkButton';
+
+import JustLink from './JustLink';
 import { checkCookie } from '../utils/cookies';
 
 
@@ -72,15 +74,41 @@ class MenuTop extends Component {
     }
 
       return (
-        <div>
-          {this.state.profileNull ? <LinkButton classNameReplace="btn btn-avatar" to='/dashboard/profile/'><img src="/avatar.png" /><br/><span>No Name</span></LinkButton> : '' }
-          {this.state.profile && !this.state.profileNull ? <LinkButton classNameReplace="btn btn-avatar" to='/dashboard/profile/'><img src={this.state.profile.icon} /><br/><span>{this.state.profile.name}</span></LinkButton> : '' }
-          <LinkButton className={this.state.selected.main} to='/dashboard/main/'>Главная</LinkButton> &nbsp;
-          <LinkButton className={this.state.selected.channels} to='/dashboard/channels/'>Телеканалы</LinkButton> &nbsp;
-          <LinkButton className={this.state.selected.programs} to='/dashboard/programs/'>ТВ архив</LinkButton> &nbsp;
-          <LinkButton className={this.state.selected.videos} to='/dashboard/videos/'>Кинотеатры</LinkButton> &nbsp;
-          <LinkButton className={this.state.selected.devices} to='/dashboard/devices/'>Мои устройства</LinkButton>
-        </div>
+
+        <header class="header d-flex justify-content-start justify-content-lg-between align-items-center">
+            <ul class="header__nav nav d-block d-lg-flex" id="nav">
+              <li class="header__nav-item nav-item">
+                <JustLink replaceClass="header__nav-link nav-link active" to="/dashboard/profile/">Главная</JustLink>
+              </li>
+              <li class="header__nav-item nav-item">
+                <JustLink replaceClass="header__nav-link nav-link" to="/dashboard/channels/">Телеканалы</JustLink>
+              </li>
+              <li class="header__nav-item nav-item">
+               <JustLink replaceClass="header__nav-link nav-link" to="/dashboard/programs/">ТВ архив</JustLink>
+              </li>
+              <li class="header__nav-item nav-item">
+                <JustLink replaceClass="header__nav-link nav-link" to="/dashboard/videos/">Кинотеатры</JustLink>
+              </li>
+              <li class="header__nav-item nav-item">
+                <JustLink replaceClass="header__nav-link nav-link" to="/dashboard/devices/">Мои устройства</JustLink>
+              </li>
+            </ul>
+            <a href="#" class="header__user d-flex align-items-center flex-shrink-0">
+              <div class="header__user-name flex-grow-1">
+                {this.state.profile ? <span>{this.state.profile.name}</span> : ''}
+                {this.state.profileNull ? <span>No Name</span> : '' }
+              </div>
+              <div class="header__user-avatar flex-shrink-0">
+                {this.state.profileNull ? <LinkButton classNameReplace="btn btn-avatar" to='/dashboard/profile/'><img className="header__user-img" src="/avatar.png" /></LinkButton> : '' }
+                {this.state.profile && !this.state.profileNull ? <LinkButton classNameReplace="btn btn-avatar" to='/dashboard/profile/'><img src={this.state.profile.icon} /></LinkButton> : '' }
+              </div>
+            </a>
+            <div class="header__pull d-block d-lg-none flex-shrink-0" id="pull">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </header>
       );
   }
 }

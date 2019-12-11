@@ -140,7 +140,7 @@ class ProfileAdd extends React.Component {
     };
 
     if (this.state.icon){
-      data.icon = this.state.icon;
+      data.icon_base64 = this.state.icon;
     }
     that.setState({loading: true});
     fetch(process.env.REACT_APP_API_URL+'/v2/users/self/profiles?access_token=' + that.state.token, {
@@ -153,15 +153,15 @@ class ProfileAdd extends React.Component {
       return response.json();
     }).then(function (result) {
       console.log(result);
-      //localStorage.removeItem('videos');
-      //localStorage.removeItem('videos_filters');
-      //localStorage.removeItem('mainFilters');
-      //localStorage.removeItem('programs');
-      //localStorage.removeItem('programs_filters');
-      //localStorage.removeItem('channels');
-      //localStorage.removeItem('profiles');
-      //localStorage.removeItem('profile');
-     // window.top.location.reload();
+      localStorage.removeItem('videos');
+      localStorage.removeItem('videos_filters');
+      localStorage.removeItem('mainFilters');
+      localStorage.removeItem('programs');
+      localStorage.removeItem('programs_filters');
+      localStorage.removeItem('channels');
+      localStorage.removeItem('profiles');
+      localStorage.removeItem('profile');
+      window.top.location.reload();
     });    
     
   };

@@ -21,7 +21,7 @@ const JustLink = (props) => {
   }
 
   return (
-    <a className={className}
+    <a href="javascript:" className={className}
       {...rest} // `children` is just another prop!
       onClick={(event) => {
         onClick && onClick(event)

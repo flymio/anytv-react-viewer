@@ -85,8 +85,6 @@ class ShowMain extends Component {
   };  
 
 
-
-
   showWides(items, classname){
 
     return items.map(function(item,index){
@@ -101,8 +99,6 @@ class ShowMain extends Component {
     });
 
   };  
-
-
 
   showFilter(item){
     var filter_name = "mainfilter_" + item.id;
@@ -199,12 +195,14 @@ class ShowMain extends Component {
 
     //<span style="display:none">, ID: {item.id} !{index}!{item.type}!{item.template}</span>
     return this.state.filters.map(function(item, index){
-      return (
-        <div className="well well-lg">
-          <h3>{item.name}</h3>
-          <hr/>
-          {that.showFilter(item)}
-        </div>);
+      if (index<15){
+        return (
+          <div className="well well-lg">
+            <h3>{item.name}</h3>
+            <hr/>
+            {that.showFilter(item)}
+          </div>);
+      }
     });
   }
 
