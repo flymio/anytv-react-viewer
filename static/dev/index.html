@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    @include('./include/head.html');
+  </head>
+  <body>
+    <div class="wrapper d-flex flex-column">
+      <div class="wrapper__content flex-grow-1">
+
+        <div class="container">
+          <header class="header d-flex justify-content-start justify-content-lg-between align-items-center">
+            <ul class="header__nav nav d-block d-lg-flex" id="nav">
+              <li class="header__nav-item nav-item">
+                <a href="#" class="header__nav-link nav-link active">Главная</a>
+              </li>
+              <li class="header__nav-item nav-item">
+                <a href="#" class="header__nav-link nav-link">Телеканалы</a>
+              </li>
+              <li class="header__nav-item nav-item">
+                <a href="#" class="header__nav-link nav-link">ТВ Архив</a>
+              </li>
+              <li class="header__nav-item nav-item">
+                <a href="#" class="header__nav-link nav-link">Кинотеатры</a>
+              </li>
+              <li class="header__nav-item nav-item">
+                <a href="#" class="header__nav-link nav-link">Мои устройства</a>
+              </li>
+            </ul>
+            <div class="header__user-container flex-shrink-0">
+              <div class="header__user d-flex align-items-center">
+                <div class="header__user-name flex-grow-1">Евгения</div>
+                <div class="header__user-avatar flex-shrink-0">
+                  <img src="images/img-user.jpg" alt="Евгения" class="header__user-img">
+                </div>
+              </div>
+              <div class="header__user-nav">
+                <div class="header__user-nav-content">
+                  <div class="header__user-nav-wrapper">
+                    <div class="header__user-profiles">
+                      <div class="header__user-profile">
+                        <a href="#" class="header__user d-flex align-items-center">
+                          <div class="header__user-avatar flex-shrink-0">
+                            <img src="images/img-profile-1.png" alt="Дмитрий" class="header__user-img">
+                          </div>
+                          <div class="header__user-name flex-grow-1">Дмитрий</div>
+                        </a>
+                      </div>
+                      <div class="header__user-profile">
+                        <a href="#" class="header__user d-flex align-items-center">
+                          <div class="header__user-avatar flex-shrink-0">
+                            <img src="images/img-profile-2.png" alt="Александр" class="header__user-img">
+                          </div>
+                          <div class="header__user-name flex-grow-1">Александр</div>
+                        </a>
+                      </div>
+                      <div class="header__user-profile">
+                        <a href="#" class="header__user d-flex align-items-center">
+                          <div class="header__user-avatar flex-shrink-0">
+                            <img src="images/img-profile-3.png" alt="Валерий" class="header__user-img">
+                          </div>
+                          <div class="header__user-name flex-grow-1">Валерий</div>
+                        </a>
+                      </div>
+                      <div class="header__user-profile">
+                        <a href="#" class="header__user d-flex align-items-center">
+                          <div class="header__user-avatar flex-shrink-0">
+                            <img src="images/img-profile-4.png" alt="Добавить" class="header__user-img">
+                          </div>
+                          <div class="header__user-name flex-grow-1">Добавить</div>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="header__user-profiles">
+                      <div class="header__user-profile">
+                        <a href="#" class="header__user d-flex align-items-center">
+                          <div class="header__user-name flex-grow-1">Редактировать профиль</div>
+                        </a>
+                      </div>
+                      <div class="header__user-profile">
+                        <a href="#" class="header__user d-flex align-items-center">
+                          <div class="header__user-name flex-grow-1">Аккаунт</div>
+                        </a>
+                      </div>
+                      <div class="header__user-profile">
+                        <a href="#" class="header__user d-flex align-items-center">
+                          <div class="header__user-name flex-grow-1">Помощь</div>
+                        </a>
+                      </div>
+                      <div class="header__user-profile">
+                        <a href="#" class="header__user d-flex align-items-center">
+                          <div class="header__user-name flex-grow-1">Выйти</div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="header__pull d-block d-lg-none flex-shrink-0" id="pull">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </header>
+        </div>
+
+        <div class="carousel">
+          <div class="carousel__container container" id="carousel-container"></div>
+          <div class="carousel__cover" id="carousel">
+            <div class="carousel__slide">
+              <a href="#" class="carousel__slide-link">
+                <img src="images/content/img-banner-1.jpg" alt="Моана" class="carousel__slide-img w-100">
+              </a>
+            </div>
+            <div class="carousel__slide">
+              <a href="#" class="carousel__slide-link">
+                <img src="images/content/img-banner-2.jpg" alt="Лило и Стич" class="carousel__slide-img w-100">
+              </a>
+            </div>
+            <div class="carousel__slide">
+              <a href="#" class="carousel__slide-link">
+                <img src="images/content/img-banner-3.jpg" alt="Тачки 2" class="carousel__slide-img w-100">
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="section container">
+          <div class="section__header d-flex align-items-start flex-wrap flex-md-nowrap">
+            <h3 class="h2 section__title flex-grow-1">Выбор редакции</h3>
+          </div>
+          <div class="section__carousel-cover">
+            <div class="section__carousel">
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-1.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-2.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-3.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-4.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-5.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-6.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-7.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-8.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section container">
+            <div class="section__header d-flex align-items-start flex-wrap flex-md-nowrap">
+            <h3 class="h2 section__title flex-grow-1">Киносвидание</h3>
+          </div>
+          <div class="section__carousel-cover">
+            <div class="section__carousel">
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-4.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-5.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-6.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-1.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-2.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-3.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-7.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-8.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section container">
+          <div class="section__header d-flex align-items-start flex-wrap flex-md-nowrap">
+            <h3 class="h2 section__title flex-grow-1">Исторические фильмы</h3>
+          </div>
+          <div class="section__carousel-cover">
+            <div class="section__carousel">
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-5.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-6.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-7.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-8.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-1.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-2.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-3.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+              <div class="section__carousel-slide">
+                <a href="#" class="section__carousel-link">
+                  <img src="images/content/img-video-4.jpg" alt="" class="section__carousel-img w-100">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    @include('./include/scripts.html');
+  </body>
+</html>

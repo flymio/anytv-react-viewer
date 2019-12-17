@@ -1,0 +1,44 @@
+.form {
+  width: 100%;
+  padding: 50px 15px;
+  @media screen and (min-width: 480px) {
+    width: 405px;
+  }
+  &__title {
+    text-transform: none;
+    font-weight: 600;
+    margin-bottom: 30px;
+  }
+  &__button {
+    text-align: center;
+    height: 48px;
+    border-radius: 4px;
+    background: #FF5B5B;
+    color: #FFF;
+    text-transform: uppercase;
+    font: 700 15px 'Open Sans', sans-serif;
+    letter-spacing: 1px;
+    width: 100%;
+    box-shadow: none!important;
+    &:hover,
+    &:active {
+      background: #FF7676;
+      color: #FFF;
+    }
+  }
+  &__link {
+    padding-top: 30px;
+    color: #CACACA;
+    font-size: 13px;
+  }
+  &__link-item {
+    color: #FFF;
+  }
+  &__description {
+    margin-top: 30px;
+    border-top: 1px solid #3B3E48;
+    padding-top: 10px;
+    color: #CACACA;
+    font-size: 13px;
+  }
+}

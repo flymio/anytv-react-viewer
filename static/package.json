@@ -1,0 +1,35 @@
+{
+  "name": "film.tpl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "dev": "SET NODE_ENV=development&&gulp",
+    "dist": "SET NODE_ENV=production&&gulp",
+    "notm": "SET NODE_ENV=notminify&&gulp"
+  },
+  "author": "uskov ruslan",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/register": "^7.6.2",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-babel": "^8.0.0",
+    "gulp-cache-bust": "^1.4.1",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-dart-sass": "^0.9.1",
+    "gulp-file-include": "^2.1.1",
+    "gulp-group-css-media-queries": "^1.2.2",
+    "gulp-if": "^3.0.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
+    "gulp-useref": "^3.1.6"
+  },
+  "dependencies": {
+    "slick-carousel": "^1.8.1"
+  }
+}

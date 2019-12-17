@@ -1,0 +1,143 @@
+html,
+body {
+  height: 100%;
+}
+body {
+  font: 400 14px 'Open Sans', sans-serif;
+  color: #FFF;
+  background: #0B1118;
+}
+a {
+  color: #FFF;
+  outline: none;
+  text-decoration: none;
+  transition: all 300ms ease;
+  &:hover,
+  &:active {
+    text-decoration: none;
+    color: #FF5B5B;
+  }
+}
+p {
+  margin: 0 0 20px;
+}
+img {
+  display: block;
+  max-width: 100%;
+  margin: 0;
+}
+strong,
+b {
+  font-weight: 700;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font: {
+    family: 'Open Sans', sans-serif;
+    weight: 700;
+  }
+  color: #FFF;
+  margin: 0 0 20px;
+  line-height: normal;
+  text-transform: uppercase;
+}
+h1,
+.h1 {
+  font-size: 24px;
+}
+h2,
+.h2 {
+  font-size: 20px;
+}
+h3,
+.h3 {
+  font-size: 18px;
+}
+h4,
+.h4 {
+  font-size: 16px;
+}
+h5,
+.h5 {
+  font-size: 14px;
+}
+h6,
+.h6 {
+  font-size: 12px;
+}
+ul,
+ol {
+  margin: 0 0 20px;
+}
+q {
+  margin: 0 0 20px;
+  display: block;
+}
+svg {
+  display: block;
+  overflow: hidden;
+}
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #96989C;
+  opacity: 1
+}
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: #96989C;
+  opacity: 1
+}
+input:-moz-placeholder,
+textarea:-moz-placeholder {
+  color: #96989C;
+  opacity: 1
+}
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: #96989C;
+  opacity: 1
+}
+input::-ms-clear {
+  display: none;
+}
+.wrapper {
+  overflow: hidden;
+  min-height: 100%;
+  padding-bottom: 30px;
+}
+.container {
+  max-width: none!important;
+  @media screen and (min-width: 1200px) {
+    max-width: 1140px!important;
+  }
+}
+.form-group {
+  margin-bottom: 0;
+  padding-bottom: 20px;
+}
+.form-control {
+  background: #31343E;
+  height: 48px;
+  border: 1px solid #31343E;
+  color: #FFF;
+  outline: none;
+  box-shadow: none!important;
+  font: 400 14px 'Open Sans', sans-serif;
+  transition: all 300ms ease;
+  border-radius: 4px;
+  &:focus {
+    border-color: #6D6F76;
+    background: #31343E;
+    color: #FFF;
+  }
+}
