@@ -287,6 +287,9 @@ class MenuTop extends Component {
               <li class="header__nav-item nav-item">
                 <JustLink replaceClass={this.showMenuClass('videos')} to="/dashboard/videos/">Кинотеатры</JustLink>
               </li>
+              <li class="header__nav-item nav-item">
+                <JustLink replaceClass={this.showMenuClass('persons')} to="/dashboard/persons/">Персоны</JustLink>
+              </li>
               <li class="header__nav-item nav-item header__nav-item__search">
                 <input type="search" value={this.state.search}  id="search" onChange={this.handleChangeSearch} className="form-control search-input" />
               </li>
@@ -380,7 +383,7 @@ const getImg = (imgs) => {
       img = imgs[i].src;
     }
   }
-  return img + "?w=350&h=200&crop=1";
+  return img + "?w=350&h=163&crop=1";
 }
 
 export default withRouter(MenuTop);

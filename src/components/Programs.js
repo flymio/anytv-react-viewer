@@ -24,6 +24,7 @@ class Programs extends Component {
       page: 0,
       limit: 24,
     };    
+    this.schedules = {};
     this.params = props.match.params;
     this.showCategories = this.showCategories.bind(this);
     this.showPrograms = this.showPrograms.bind(this);
@@ -49,8 +50,10 @@ class Programs extends Component {
       fetch(process.env.REACT_APP_API_URL+'/v2/programs/'+program_id+'/schedule?access_token=' + that.state.token).then(function (response) {
         return response.json();
       }).then(function (result) {
-        that.setState({ 'program': result});
         that.setState({ 'loading': false});
+        if (result){
+          that.setState({ 'program': result});          
+        }
       });
   };
 
@@ -80,6 +83,10 @@ class Programs extends Component {
 
   showProgram(){
     let that = this;
+
+
+    console.log(this.state.program);
+
     let item = this.state.program[0].program;
     let schedule = this.state.program;
     return <div className="Program">
@@ -272,7 +279,11 @@ class Programs extends Component {
     const params = that.props.match.params;
 
     if (params && params.url_id){
-      that.loadProgram(params.url_id);
+      if (!this.schedules[params.url_id]){
+        this.schedules[params.url_id] = true;
+        that.loadProgram(params.url_id);  
+      }
+      
       return (
         <div>
           <br/>

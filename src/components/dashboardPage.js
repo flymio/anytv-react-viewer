@@ -11,6 +11,7 @@ import MenuTop from './MenuTop';
 import Channels from './Channels';
 import Programs from './Programs';
 import Videos from './Videos';
+import Persons from './Persons';
 
 
 import RemoveOneDevice from './RemoveOneDevice';
@@ -172,6 +173,14 @@ class DashboardPage extends Component {
       return (
         <div className="Dashboard">
         {!this.state.need_remove_device ? <div><MenuTop /><Profiles/></div> : <RemoveOneDevice/>}          
+        </div>
+      );      
+    }
+
+    if (this.params.url && this.params.url == 'persons' && !this.params.url_id){
+      return (
+        <div className="Dashboard">
+        {!this.state.need_remove_device ? <div><MenuTop /><Persons/></div> : <RemoveOneDevice/>}          
         </div>
       );      
     }
