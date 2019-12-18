@@ -1,0 +1,129 @@
+.carousel {
+  position: relative
+}
+.carousel .slick-slider {
+  display: block!important
+}
+.carousel .slick-slide {
+  outline: 0
+}
+.carousel .slick-slide > div {
+  outline: 0
+}
+.carousel__cover {
+  display: none
+}
+.carousel__slide {
+  display: block!important;
+  margin: 0 15px 30px;
+  width: auto!important;
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
+  overflow: hidden
+}
+.slick-current .carousel__slide {
+  box-shadow: 0 10px 30px -6px #000
+}
+.carousel__slide-link {
+  display: block;
+  position: relative
+}
+.carousel__slide-img {
+  max-width: none;
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
+  border: 3px solid #fff;
+  border-radius: 5px
+}
+.carousel__container {
+  position: relative
+}
+.carousel__container .slick-arrow {
+  display: block;
+  position: absolute;
+  top: 183px;
+  z-index: 10;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: 0 0;
+  font-size: 0;
+  border-top: 3px solid #fff;
+  width: 20px;
+  height: 20px;
+  outline: 0;
+  cursor: pointer
+}
+.carousel__container .slick-prev {
+  border-left: 3px solid #fff;
+  left: -40px;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg)
+}
+.carousel__container .slick-next {
+  border-right: 3px solid #fff;
+  right: -40px;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg)
+}
+.carousel .slick-dots {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  bottom: 40px;
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -moz-box-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap
+}
+.carousel .slick-dots li {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  -moz-box-flex: 0;
+  flex: 0 0 auto;
+  padding: 5px
+}
+.carousel .slick-dots button {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  outline: 0;
+  padding: 0;
+  font-size: 0;
+  background: #fff;
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease
+}
+.carousel .slick-dots .slick-active button {
+  background: #ff5b5b
+}
+@media screen and (min-width:1200px) {
+  .carousel__slide {
+    margin-left: 10px;
+    margin-right: 10px
+  }
+  .carousel__slide-link {
+    width: 1110px
+  }
+  .carousel__slide-img {
+    opacity: .2;
+    border: 3px solid transparent
+  }
+  .slick-current .carousel__slide-img {
+    opacity: 1;
+    border-color: #fff
+  }
+}

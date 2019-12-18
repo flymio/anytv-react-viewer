@@ -1,0 +1,182 @@
+.header {
+  padding-top: 25px;
+  padding-bottom: 25px
+}
+.header__pull {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  right: 15px;
+  top: 42px;
+  z-index: 101;
+  cursor: pointer
+}
+.active-nav .header__pull {
+  position: fixed
+}
+.header__pull div {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #fff;
+  position: absolute;
+  left: -2px;
+  border-radius: 3px;
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease
+}
+.header__pull div:nth-child(1) {
+  top: 0
+}
+.active-nav .header__pull div:nth-child(1) {
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  top: 7px
+}
+.header__pull div:nth-child(2) {
+  top: 7px
+}
+.active-nav .header__pull div:nth-child(2) {
+  opacity: 0
+}
+.header__pull div:nth-child(3) {
+  bottom: 0
+}
+.active-nav .header__pull div:nth-child(3) {
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  bottom: 7px
+}
+.header__nav {
+  margin: 0;
+  padding: 30px 50px 30px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  -webkit-transform: translateX(100%);
+  transform: translateX(100%);
+  z-index: 100;
+  background: #0b1118;
+  height: 100%;
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
+  overflow-x: hidden;
+  overflow-y: auto
+}
+.active-nav .header__nav {
+  -webkit-transform: translateX(0);
+  transform: translateX(0)
+}
+.header__nav-link {
+  text-transform: uppercase;
+  padding: 10px 15px;
+  font-weight: 600
+}
+.header__nav-link.active {
+  color: #ff5b5b
+}
+.header__user {
+  font-weight: 600;
+  position: relative;
+  z-index: 91
+}
+.header__user:active,
+.header__user:hover {
+  color: #fff
+}
+.header__user-avatar {
+  margin-left: 15px
+}
+.header__user-img {
+  max-width: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%
+}
+.header__user-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease
+}
+.header__user-container:hover .header__user-nav {
+  opacity: 1;
+  visibility: visible
+}
+.header__user-nav-content {
+  width: 100%;
+  background: #131313;
+  border-radius: 0 0 3px 3px;
+  border: 1px solid #414141;
+  padding: 100px 15px 0
+}
+.header__user-nav-wrapper {
+  padding: 20px 0;
+  border-top: 1px solid #414141
+}
+.header__user-profiles {
+  margin-top: 35px
+}
+.header__user-profiles:first-child {
+  margin-top: 0
+}
+.header__user-profile {
+  margin-top: 20px
+}
+.header__user-profile:first-child {
+  margin-top: 0
+}
+.header__user-profile .header__user-avatar {
+  margin-left: 0;
+  margin-right: 15px
+}
+@media screen and (min-width:480px) {
+  .header__user-container {
+    position: relative
+  }
+  .header__user-nav {
+    left: -15px;
+    margin-top: -25px;
+    width: 240px
+  }
+}
+@media screen and (min-width:990px) {
+  .header__user-nav {
+    right: -25px;
+    left: auto
+  }
+  .header__user-nav-content {
+    padding-left: 25px;
+    padding-right: 25px
+  }
+}
+@media screen and (min-width:992px) {
+  .header__nav {
+    position: relative;
+    width: auto;
+    margin: 0 0 0 -30px;
+    height: auto;
+    -webkit-transition: none;
+    transition: none;
+    padding: 0;
+    overflow: visible;
+    -webkit-transform: none;
+    transform: none
+  }
+  .header__nav-item {
+    padding: 10px 0 10px 30px
+  }
+  .header__nav-item__search {
+    padding: 7px 0 10px 30px;    
+  }
+
+  .header__nav-link {
+    padding: 0
+  }
+}
