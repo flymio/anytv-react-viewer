@@ -25,6 +25,8 @@ class MenuTop extends Component {
         devices:'',
       }
     };
+
+
     this.need_timer = 0;
     this.handleChangeSearch = this.handleChangeSearch.bind(this);
     this.showOtherProfiles = this.showOtherProfiles.bind(this);
@@ -94,6 +96,15 @@ class MenuTop extends Component {
     var that = this;
     this.setState({
       [event.target.id]: event.target.value
+    });
+
+    console.log(that.props);
+
+
+    that.props.history.push({
+      pathname: that.props.location.pathname,
+      hash: event.target.value,
+      state: {search: event.target.value}
     });
 
     if (this.need_timer){
@@ -202,6 +213,12 @@ class MenuTop extends Component {
     else{
       this.fetchProfiles();
     }
+    if (this.props.location.hash){
+      let search = decodeURIComponent(this.props.location.hash);
+      search = search.substr(1, search.length-1);
+      this.setState({'search': search});
+      this.fetchSearch(this, search);
+    }
   };
 
   showOtherProfiles(current){
@@ -240,6 +257,19 @@ class MenuTop extends Component {
     else{
       this.state.selected['main'] = 'btn-selected';
     }
+
+
+    if (this.state.search && !this.props.location.hash){
+      this.setState({'searchResults': [], 'search': ''});
+    }
+    if (!this.state.search && this.props.location.hash){
+      let search = decodeURIComponent(this.props.location.hash);
+      search = search.substr(1, search.length-1);
+      this.setState({'search': search});
+      this.fetchSearch(this, search);
+    }
+
+    console.log(this.props);
 
       return (
         <div>
