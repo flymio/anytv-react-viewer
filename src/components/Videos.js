@@ -63,6 +63,18 @@ class Videos extends Component {
   };
 
   hideModal = () => {
+
+    if (this.props.location){
+      let a = this.props.location.pathname.split("/");
+      let url = this.props.location.pathname;
+      if (a.length==5){
+        a.pop();
+        url = a.join("/");
+        this.props.history.push({
+          pathname: url,
+        });        
+      }
+    }
     this.setState({ show: false });
   };
 
@@ -381,6 +393,9 @@ class Videos extends Component {
         that.video_id = params.url_id;
         that.episode_id = params.url_id2;
         that.loadVideo(params.url_id, params.url_id2);
+      }
+      if (that.video_id && that.video_id == params.url_id && !that.state.show){
+        that.setState({show: true});
       }
       return (
         <div>
