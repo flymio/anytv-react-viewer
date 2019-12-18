@@ -55,7 +55,8 @@ class Profiles extends React.Component {
         localStorage.removeItem('programs');
         localStorage.removeItem('programs_filters');
         localStorage.removeItem('channels');
-        window.top.location.reload();
+        
+        that.props.history.push('/');
       });    
       
     };

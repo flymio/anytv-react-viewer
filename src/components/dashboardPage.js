@@ -118,6 +118,10 @@ class DashboardPage extends Component {
       );      
     }
 
+    if (this.params.url && this.params.url == 'deviceRegister' && this.deviceID){
+      return <Redirect to="/dashboard" />
+    }
+
     if (this.params.url && this.params.url == 'deviceRegister' && !this.deviceID){
       this.registerDevice(types.device_info);      
       localStorage.setItem('not_register', true);

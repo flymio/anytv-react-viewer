@@ -48,15 +48,18 @@ class ShowMain extends Component {
   showVideo(items, classname){
     var that = this;
     return items.map(function(item,index){
+      if (index<10){
       let img = item.img[0].src;
-      for(let i=0;i<item.img.length;i++){
-        if (item.img[i].ar == "4:3"){
-          img = item.img[i].src;
+        for(let i=0;i<item.img.length;i++){
+          if (item.img[i].ar == "4:3"){
+            img = item.img[i].src;
+          }
         }
+        img = img + "?w=300&h=200&crop=true";
+        return (
+          <div><JustLink replaceClass="badge badge-success ajax-link float-right" to={that.showLinkToVideo(item)}><img src={img} className={classname} /></JustLink></div>
+        )        
       }
-      return (
-        <div><JustLink replaceClass="badge badge-success ajax-link float-right" to={that.showLinkToVideo(item)}><img src={img} className={classname} /></JustLink></div>
-      )
     });
   }; 
 
@@ -66,20 +69,22 @@ class ShowMain extends Component {
   showProgram(items, classname){
     let that = this;
     if (items){
-      console.log(items);
       return items.map(function(item,index){
-        let img = '/avatar.png';
-        if (item.img[0] && item.img[0].src){
-          img = item.img[0].src;  
-        }
-        for(let i=0;i<item.img.length;i++){
-          if (item.img[i].ar == "16:9"){
-            img = item.img[i].src;
+        if (index<10){
+          let img = '/avatar.png';
+          if (item.img[0] && item.img[0].src){
+            img = item.img[0].src;  
           }
-        }
-        return (
-          <div><JustLink replaceClass="badge badge-success ajax-link float-right" to={that.showLinkToProgram(item)}><img src={img} className={classname} /></JustLink></div>
-        )
+          for(let i=0;i<item.img.length;i++){
+            if (item.img[i].ar == "16:9"){
+              img = item.img[i].src;
+            }
+          }
+          img = img + "?w=300&h=200&crop=true";
+          return (
+            <div><JustLink replaceClass="badge badge-success ajax-link float-right" to={that.showLinkToProgram(item)}><img src={img} className={classname} /></JustLink></div>
+          )
+          }
       });
     }
   };  
@@ -92,7 +97,7 @@ class ShowMain extends Component {
       if (item.images[1] && item.images[1].type == 'wide'){
         img = item.images[1].src;
       }
-
+      //img = img + "?w=1200&h=800&crop=true";
       return (
         <div><img src={img} className={classname} /></div>
       )
@@ -195,7 +200,7 @@ class ShowMain extends Component {
 
     //<span style="display:none">, ID: {item.id} !{index}!{item.type}!{item.template}</span>
     return this.state.filters.map(function(item, index){
-      if (index<15){
+      if (index<10){
         return (
           <div className="well well-lg">
             <h3>{item.name}</h3>

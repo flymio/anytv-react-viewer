@@ -5,6 +5,7 @@ import { checkCookie } from '../utils/cookies';
 import { loginUserAction, registerUserAction } from '../actions/authenticationActions';
 import { setCookie } from '../utils/cookies';
 import { ClipLoader } from 'react-spinners';
+import JustLink from './JustLink';
 import "./loginPage.css";
 
 import { Button, FormGroup, FormControl, ControlLabel, Alert} from "react-bootstrap";
@@ -109,7 +110,8 @@ class LoginPage extends Component {
     const style = { position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
 
     return (
-      <div className="Login">
+      <div className="wrapper d-flex align-items-center justify-content-center">
+        <div className="form flex-shrink-0">
         <h3>Авторизация</h3>
         {isLogged ? <Redirect to='dashboard' />: '' }
         {!isSuccess ? <div>{message}</div> : <Redirect to='dashboard' />}
@@ -137,12 +139,15 @@ class LoginPage extends Component {
           <Button
             block
             bsSize="large"
-            bsStyle="primary"
+            bsStyle="btn form__button"
             disabled={!this.validateForm()}
             type="submit"
           >
             Войти
           </Button>
+          <br/>
+          <div className="form__link">Первый раз на сайте? <JustLink replaceClass="form__link-item" to="/register/">Регистрация</JustLink></div>
+          <div className="form__description">С помощью этой учетной записи вы можете получить доступ к службам сайта.</div>
           <br/>
           {this.state.autoreg? <Button
             block
@@ -160,6 +165,7 @@ class LoginPage extends Component {
           />
           </div>
         </form>        
+        </div>
       </div>
     );
   }

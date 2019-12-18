@@ -91,7 +91,8 @@ class RemoveOneDevice extends Component {
         <ul class="list-group">
           {this.listDevices()}
         </ul>
-        <div class="alert alert-info">При нажатии на любое устройство оно будет удалено</div>
+        <br/>
+        <div class="alert alert-info">При нажатии на удалить устройство оно будет удалено</div>
         </div>
       );
   }
