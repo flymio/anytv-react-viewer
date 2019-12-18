@@ -31,10 +31,11 @@ class Programs extends Component {
     this.showVideos = this.showVideos.bind(this);
     this.checkPrograms = this.checkPrograms.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
-    this.loadProgram = this.loadProgram.bind(this);
+    this.loadSchedule = this.loadSchedule.bind(this);
     this.showProgram = this.showProgram.bind(this);
     this.showGenres = this.showGenres.bind(this);
     this.showSchedule = this.showSchedule.bind(this);
+    this.loadProgram = this.loadProgram.bind(this);
     this.showLinkToChannel = this.showLinkToChannel.bind(this);
   }
 
@@ -45,17 +46,33 @@ class Programs extends Component {
   };
 
 
-  loadProgram(program_id){
+  loadSchedule(program_id){
     let that = this;
       fetch(process.env.REACT_APP_API_URL+'/v2/programs/'+program_id+'/schedule?access_token=' + that.state.token).then(function (response) {
         return response.json();
+      }).then(function (result) {        
+        if (result && result.length > 0){
+          that.setState({ 'loading': false});
+          that.setState({ 'program': result});          
+        }
+        else{
+          that.loadProgram(program_id);
+        }
+      });
+  };
+
+  loadProgram(program_id){
+    let that = this;
+      fetch(process.env.REACT_APP_API_URL+'/v2/programs/'+program_id+'?access_token=' + that.state.token).then(function (response) {
+        return response.json();
       }).then(function (result) {
         that.setState({ 'loading': false});
-        if (result){
+        if (result && result.id){
           that.setState({ 'program': result});          
         }
       });
   };
+
 
   showGenres(program){
       return program.genres.map((item, key) =>      
@@ -83,23 +100,27 @@ class Programs extends Component {
 
   showProgram(){
     let that = this;
+    let item = {};
+    let schedule = [];
+    if (this.state.program[0]){
+      item = this.state.program[0].program;
+      schedule = this.state.program || [];
+    }
+    else{
+      item = this.state.program; 
+    }
 
-
-    console.log(this.state.program);
-
-    let item = this.state.program[0].program;
-    let schedule = this.state.program;
+    console.log(2344, item);
     return <div className="Program">
           <h3>{item.title}</h3>
           <div className="ProgramDescription">{item.description}</div>
           <div className="ProgramGenres">{that.showGenres(item)}<br/><br/></div>
           {item.img[0] ? <div className="ProgramSlider"><img src={item.img[0].src} /></div> : ''}
           <br/>
-          <h4>Расписание</h4>
           <br/>
-          <ul class="list-group">
-          {that.showSchedule(schedule)}
-          </ul>
+          {schedule.length > 0 ? <h4>Расписание</h4> : <h4>Сорян, Расписания нет</h4>}
+          <hr/>
+          <ul class="list-group">{that.showSchedule(schedule)}</ul>
       </div>;
 
   }
@@ -281,7 +302,7 @@ class Programs extends Component {
     if (params && params.url_id){
       if (!this.schedules[params.url_id]){
         this.schedules[params.url_id] = true;
-        that.loadProgram(params.url_id);  
+        that.loadSchedule(params.url_id);  
       }
       
       return (

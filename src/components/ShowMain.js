@@ -204,7 +204,6 @@ class ShowMain extends Component {
         return (
           <div className="well well-lg">
             <h3>{item.name}</h3>
-            <hr/>
             {that.showFilter(item)}
           </div>);
       }

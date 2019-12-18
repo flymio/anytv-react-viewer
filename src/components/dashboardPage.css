@@ -53,3 +53,9 @@ img.avatar-uploaded {
 .search-input {
   height: 25px;
 }
+
+
+.well h3 {
+  text-align: center;
+  margin-bottom: 5px;
+} 

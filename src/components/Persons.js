@@ -37,6 +37,7 @@ class Persons extends Component {
       console.log(result);
       that.setState({
         persons: result,
+        loading: false,
       })
     });    
 
