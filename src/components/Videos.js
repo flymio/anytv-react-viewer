@@ -31,9 +31,14 @@ class Videos extends Component {
       episode_id: 0,
       video: false,
       limit: 12,
+      show: false,
     };    
     this.video_id = 0;
     this.episode_id = 0;
+
+
+    this.showModal = this.showModal.bind(this);
+    this.hideModal = this.hideModal.bind(this);
 
     this.showClassNameEpisode = this.showClassNameEpisode.bind(this);
     this.showCategories = this.showCategories.bind(this);
@@ -53,6 +58,15 @@ class Videos extends Component {
 
 
 
+  showModal = () => {
+    this.setState({ show: true });
+  };
+
+  hideModal = () => {
+    this.setState({ show: false });
+  };
+
+
   showGenres(program){
       return program.genres.map((item, key) =>      
         <div className="badge badge-success badge-padding">{item.name}</div>
@@ -67,7 +81,9 @@ class Videos extends Component {
 
 
   scroll(ref) {
-    ref.current.scrollIntoView({behavior: 'smooth'})
+    if (ref && ref.current){
+      ref.current.scrollIntoView({behavior: 'smooth'})      
+    }
   };
 
 
@@ -96,7 +112,6 @@ class Videos extends Component {
 
 
   showClassNameEpisode(item, episode_id){
-    console.log(item, episode_id)
     if (item && item == episode_id){
       return "list-group-item active";   
     }
@@ -127,6 +142,7 @@ class Videos extends Component {
       fetch(process.env.REACT_APP_API_URL+'/v2/videos/'+video_id+'/stream?access_token=' + that.state.token).then(function (response) {
         return response.json();
       }).then(function (result) {
+        that.setState({ 'show': true});
         that.setState({ 'episode': result});
         that.setState({ 'loading': false});
         that.scroll(that.myRef);
@@ -138,6 +154,7 @@ class Videos extends Component {
       return response.json();
     }).then(function (result) {
       that.scroll(that.myRef);
+      that.setState({ 'show': true});
       that.setState({ 'episode': result});
       that.setState({ 'episode_id': episode_id});
       that.setState({ 'loading': false});
@@ -163,8 +180,9 @@ class Videos extends Component {
 
   showEpisode(){
     let that = this;
+    const style = { position: "position", top: "0", left: "0", width: "100%", height: "100%", transform: "translate(-50%, -50%)" };
     return (<div>
-      {this.state.episode && this.state.episode.hls ? <div ref={this.myRef}><ReactHLS width="670" url={this.state.episode.hls}/></div> : <div ref={this.myRef}></div>}
+      {this.state.episode && this.state.episode.hls ? <div ref={this.myRef}><Modal show={this.state.show} handleClose={this.hideModal}><ReactHLS width="1040" height="auto" url={this.state.episode.hls}/></Modal></div> : <div ref={this.myRef}></div>}
     </div>);
   }
 
@@ -407,6 +425,23 @@ class Videos extends Component {
     );
   }
 }
+
+
+
+const Modal = ({ handleClose, show, children }) => {
+  let class_name = "modal display-block";
+  if (!show){
+    class_name = "modal display-none";
+  }
+  return (
+    <div className={class_name}>
+      <section className="modal-main">
+        {children}
+        <button onClick={handleClose}>close</button>
+      </section>
+    </div>
+  );
+};
 
 
 
