@@ -113,19 +113,6 @@ class MenuTop extends Component {
     that.need_timer = window.setTimeout(that.fetchSearch(that, event.target.value), 1000);
   }
 
-
-  fetchProfiles() {
-    var that = this;
-    fetch(process.env.REACT_APP_API_URL+'/v2/users/self/profiles?access_token=' + that.state.token).then(function (response) {
-      return response.json();
-    }).then(function (result) {
-      that.setState({ 'profile': result[0]});
-      that.setState({ 'profiles': result});
-      localStorage.setItem('profiles', JSON.stringify(result));
-      localStorage.setItem('profile', JSON.stringify(result[0]));
-    });
-  }  
-
   logout(){
     var that = this;
 
@@ -155,17 +142,6 @@ class MenuTop extends Component {
     let data = {
       id: item.id,
     };
-
-    //   localStorage.setItem('profile', JSON.stringify(item));
-    //   localStorage.removeItem('videos');
-    //   localStorage.removeItem('videos_filters');
-    //   localStorage.removeItem('programs');
-    //   localStorage.removeItem('programs_filters');
-    //   localStorage.removeItem('channels');
-    //   //window.top.location.reload();
-
-    // console.log(data);
-    // return;
     fetch(process.env.REACT_APP_API_URL+'/v2/users/self/profile?access_token=' + that.state.token, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -194,24 +170,16 @@ class MenuTop extends Component {
     const storeProfile = localStorage.getItem('profile');
     if (storeProfiles){
       let profiles = JSON.parse(storeProfiles);
-      
+      this.setState({ 'profiles': profiles});
       if (!storeProfile){
-        this.setState({ 'profile': profiles[0]});
+        this.setState({ 'profileNull': true});
         localStorage.setItem('profile', JSON.stringify(profiles[0]));        
       }
       else{
-        if (profiles[0]){
           let profile = JSON.parse(storeProfile);
           this.setState({ 'profile': profile});
-          this.setState({ 'profiles': profiles});
-        }
-        else{
-          this.setState({ 'profileNull': true});
-        }
+          this.setState({ 'profileNull': false});
       }
-    }
-    else{
-      this.fetchProfiles();
     }
     if (this.props.location.hash){
       let search = decodeURIComponent(this.props.location.hash);
@@ -268,9 +236,6 @@ class MenuTop extends Component {
       this.setState({'search': search});
       this.fetchSearch(this, search);
     }
-
-    console.log(this.props);
-
       return (
         <div>
         <header class="header d-flex justify-content-start justify-content-lg-between align-items-center">
@@ -296,6 +261,7 @@ class MenuTop extends Component {
             </ul>
             <div class="header__user-container flex-shrink-0">
               <div class="header__user d-flex align-items-center">
+
                 <div class="header__user-name flex-grow-1">
                   {this.state.profile ? <span>{this.state.profile.name}</span> : ''}
                   {this.state.profileNull ? <span>No Name</span> : '' }

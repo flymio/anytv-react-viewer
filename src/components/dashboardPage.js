@@ -29,12 +29,16 @@ class DashboardPage extends Component {
       token: checkCookie(),
       deviceID: localStorage.getItem('deviceID') || '',
       deviceIDToken: checkCookie('deviceIDToken') || '',
+      need_to_fetch: true,      
+      profileID: '',
       schedule: [],
       is_loading: true,
       need_remove_device: false,
     };
     this.registerDevice = this.registerDevice.bind(this); 
     this.authByDeviceId = this.authByDeviceId.bind(this); 
+
+    this.fetchProfiles = this.fetchProfiles.bind(this);
   }
 
 
@@ -69,7 +73,6 @@ class DashboardPage extends Component {
     if (need_register == 'true'){
       return;
     }
-    console.log('registerDevice');
     fetch(process.env.REACT_APP_API_URL+'/v2/users/self/devices?access_token=' + that.state.token, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -92,10 +95,35 @@ class DashboardPage extends Component {
   }
 
 
+  fetchProfiles() {
+    var that = this;
+    fetch(process.env.REACT_APP_API_URL+'/v2/users/self/profiles?access_token=' + that.state.token).then(function (response) {
+      return response.json();
+    }).then(function (result) {
+      that.setState({ 'profiles': result, need_to_fetch: false});
+      localStorage.setItem('profiles', JSON.stringify(result));
+    });
+  }  
+
+
   componentWillMount() {
+    const storeProfiles = localStorage.getItem('profiles');
+    const storeProfile = localStorage.getItem('profile');
+
     if (this.state.deviceID && !this.state.deviceIDToken){
       this.authByDeviceId();
-    }    
+    }
+
+    if (!storeProfiles){
+      this.fetchProfiles();
+    }
+
+    if (!this.state.profileID){
+      if (storeProfile){
+        let profile = JSON.parse(storeProfile);
+        this.setState({profileID: profile['id']});
+      }
+    }
   };
 
 
@@ -120,7 +148,15 @@ class DashboardPage extends Component {
     }
 
     if (this.params.url && this.params.url == 'deviceRegister' && this.deviceID){
-      return <Redirect to="/dashboard" />
+      if (this.state.profileID){
+        return <Redirect to="/dashboard" />        
+      }
+      else{
+        return <div>
+                <MenuTop />
+                {!this.state.need_to_fetch ? <Profiles /> : ''}
+              </div>
+      }
     }
 
     if (this.params.url && this.params.url == 'deviceRegister' && !this.deviceID){
