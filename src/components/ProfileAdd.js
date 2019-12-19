@@ -102,6 +102,7 @@ class ProfileAdd extends React.Component {
     super(props);
     this.createProfile = this.createProfile.bind(this);
     this.changeAvatar = this.changeAvatar.bind(this);
+    this.fetchProfiles = this.fetchProfiles.bind(this);
 
     this.state = {
       user: {},
@@ -130,6 +131,17 @@ class ProfileAdd extends React.Component {
     return (this.state.name.length > 0) && !this.state.loading;
   }
 
+
+  fetchProfiles() {
+    var that = this;
+    fetch(process.env.REACT_APP_API_URL+'/v2/users/self/profiles?access_token=' + that.state.token).then(function (response) {
+      return response.json();
+    }).then(function (result) {
+      localStorage.setItem('profiles', JSON.stringify(result));
+      that.props.history.push('/');
+    });
+  }    
+
   createProfile = event => {
     event.preventDefault();
 
@@ -152,7 +164,7 @@ class ProfileAdd extends React.Component {
     }).then(function (response) {
       return response.json();
     }).then(function (result) {
-      console.log(result);
+      
       localStorage.removeItem('videos');
       localStorage.removeItem('videos_filters');
       localStorage.removeItem('mainFilters');
@@ -160,8 +172,10 @@ class ProfileAdd extends React.Component {
       localStorage.removeItem('programs_filters');
       localStorage.removeItem('channels');
       localStorage.removeItem('profiles');
-      localStorage.removeItem('profile');
-      window.top.location.reload();
+
+      localStorage.setItem('profile', JSON.stringify(result));
+      that.fetchProfiles();
+      
     });    
     
   };

@@ -41,6 +41,7 @@ class Videos extends Component {
     this.hideModal = this.hideModal.bind(this);
 
     this.showClassNameEpisode = this.showClassNameEpisode.bind(this);
+    this.hideVideo = this.hideVideo.bind(this);
     this.showCategories = this.showCategories.bind(this);
     this.checkVideos = this.checkVideos.bind(this);
     this.showVideos = this.showVideos.bind(this);
@@ -57,13 +58,30 @@ class Videos extends Component {
   }
 
 
+  hideVideo = () => {
+    localStorage.setItem('video_url', this.state.episode.hls);
+    if (this.props.location){
+      let a = this.props.location.pathname.split("/");
+      let url = this.props.location.pathname;
+      if (a.length==5){
+        a.pop();
+        url = a.join("/");
+        this.props.history.push({
+          pathname: url,
+        });        
+      }
+    }
+    this.setState({ show: false });
+  };
+
 
   showModal = () => {
+
     this.setState({ show: true });
   };
 
   hideModal = () => {
-
+    //localStorage.removeItem('video_url');
     if (this.props.location){
       let a = this.props.location.pathname.split("/");
       let url = this.props.location.pathname;
@@ -194,7 +212,7 @@ class Videos extends Component {
     let that = this;
     const style = { position: "position", top: "0", left: "0", width: "100%", height: "100%", transform: "translate(-50%, -50%)" };
     return (<div>
-      {this.state.episode && this.state.episode.hls ? <div ref={this.myRef}><Modal show={this.state.show} handleClose={this.hideModal}><ReactHLS width="1040" height="auto" url={this.state.episode.hls}/></Modal></div> : <div ref={this.myRef}></div>}
+      {this.state.episode && this.state.episode.hls ? <div ref={this.myRef}><Modal show={this.state.show} handleClose={this.hideModal} handleHide={this.hideVideo}><ReactHLS width="1040" height="auto" autoplay="true" url={this.state.episode.hls}/></Modal></div> : <div ref={this.myRef}></div>}
     </div>);
   }
 
@@ -443,7 +461,7 @@ class Videos extends Component {
 
 
 
-const Modal = ({ handleClose, show, children }) => {
+const Modal = ({ handleClose, handleHide, show, children }) => {
   let class_name = "modal display-block";
   if (!show){
     class_name = "modal display-none";
@@ -453,6 +471,7 @@ const Modal = ({ handleClose, show, children }) => {
       <section className="modal-main">
         {children}
         <button onClick={handleClose}>close</button>
+        <button onClick={handleHide}>hide</button>
       </section>
     </div>
   );
