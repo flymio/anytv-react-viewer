@@ -5,7 +5,6 @@ import LinkButton from './LinkButton';
 import JustLink from './JustLink';
 import { checkCookie, setCookie} from '../utils/cookies';
 
-import ReactHLS from 'react-hls';
 
 
 class MenuTop extends Component {
@@ -21,7 +20,6 @@ class MenuTop extends Component {
       searchResults: [],
       token: checkCookie(),
       profileNull: false,
-      reacthls: '',
       selected: {
         channels:'',
         programs:'',
@@ -43,7 +41,6 @@ class MenuTop extends Component {
     this.logout = this.logout.bind(this); 
     this.showMenuClass = this.showMenuClass.bind(this);
     this.showResults = this.showResults.bind(this);
-    this.checkHLS = this.checkHLS.bind(this);
   }
 
 
@@ -63,25 +60,6 @@ class MenuTop extends Component {
     });    
   };
 
-
-
-  checkHLS(){
-    const video_url = localStorage.getItem("video_url") || '';
-    if (video_url && this.videoURL != video_url){
-      this.videoURL = video_url;
-      this.setState({
-        reacthls: video_url,
-      });
-      //alert(video_url);
-      window.setTimeout(this.checkHLS(), 500);
-    }
-    if (!video_url && this.state.reacthls){
-      this.setState({
-        reacthls: false,
-      });
-      window.setTimeout(this.checkHLS(), 500);
-    }    
-  }
 
   showResults(){
     let that = this;
@@ -218,9 +196,6 @@ class MenuTop extends Component {
       this.setState({'search': search});
       this.fetchSearch(this, search);
     }
-
-    this.checkVideoTimer = window.setTimeout(this.checkHLS(), 500);
-
   };
 
   showOtherProfiles(current){
@@ -348,9 +323,6 @@ class MenuTop extends Component {
           <div>
             {this.state.search ? <div className="search_results">Результаты поиска <strong>{this.state.search}</strong><br/><br/><br/>{this.showResults()}</div> : '' }
           </div>
-            <div className="miniPlayer">
-              {this.state.reacthls ? <div className="miniPlayer"><ReactHLS width="300" height="auto" url={this.state.reacthls} autoplay="true" /></div> : ''}
-            </div>
           </div>
       );
   }

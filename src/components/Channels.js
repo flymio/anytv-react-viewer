@@ -26,6 +26,7 @@ class Channels extends Component {
       channelName: '',
       startDate: '',
       page: 0,
+      show: true,
       channels_categories: [],
       video: false,
       current: new Date(),
@@ -42,9 +43,54 @@ class Channels extends Component {
     this.changeVideo = this.changeVideo.bind(this);
     this.showClassnameCategory = this.showClassnameCategory.bind(this);
 
+    this.myRef = React.createRef();
+
+
+    this.showModal = this.showModal.bind(this);
+    this.hideModal = this.hideModal.bind(this);
+
 
     this.params = props.match.params;
   }
+
+
+  hideVideo = () => {
+    localStorage.setItem('video_url', this.state.episode.hls);
+    if (this.props.location){
+      let a = this.props.location.pathname.split("/");
+      let url = this.props.location.pathname;
+      if (a.length==5){
+        a.pop();
+        url = a.join("/");
+        this.props.history.push({
+          pathname: url,
+        });        
+      }
+    }
+    this.setState({ show: false });
+  };
+
+
+  showModal = () => {
+
+    this.setState({ show: true });
+  };
+
+  hideModal = () => {
+    //localStorage.removeItem('video_url');
+    if (this.props.location){
+      let a = this.props.location.pathname.split("/");
+      let url = this.props.location.pathname;
+      if (a.length==5){
+        a.pop();
+        url = a.join("/");
+        this.props.history.push({
+          pathname: url,
+        });        
+      }
+    }
+    this.setState({ show: false });
+  };
 
 
   loadChannel(channel_id, timestamp, force){
@@ -231,7 +277,7 @@ class Channels extends Component {
         <h1>{this.state.channelName}</h1>
         <div class="currentVideo">
         {(!this.state.hasStream) ? this.showCover() : ''}
-        {this.state.hasStream ? <ReactHLS url={this.state.streamUrl} autoplay="true" /> : ''}
+        {this.state.hasStream ? <div ref={this.myRef}><Modal show={this.state.show} handleClose={this.hideModal} handleHide={this.hideVideo}><ReactHLS width="1040" height="auto" autoplay="true" url={this.state.streamUrl}/></Modal></div>: ''}
         </div>
         {this.showDates()}
         <ul class="list-group">
@@ -376,6 +422,25 @@ class Channels extends Component {
     );
   }
 }
+
+
+
+const Modal = ({ handleClose, handleHide, show, children }) => {
+  let class_name = "modal display-block";
+  if (!show){
+    class_name = "modal display-none";
+  }
+  return (
+    <div className={class_name}>
+      <section className="modal-main">
+        {children}
+        <button onClick={handleClose}>close</button>
+        <button onClick={handleHide}>hide</button>
+      </section>
+    </div>
+  );
+};
+
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 

@@ -95,4 +95,14 @@ img.avatar-uploaded {
   position:fixed;
   right:200px;
   bottom:50px;
+  border:2px solid #fff;
+}
+
+
+
+
+@media all and (max-width: 1400px) {
+ .miniPlayer {
+  right: 50px;
+ } 
 }
